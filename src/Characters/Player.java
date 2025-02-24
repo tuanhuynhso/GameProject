@@ -1,11 +1,12 @@
 package Characters;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import main.CollisionChecker;
 import main.GamePanel;
 import main.keyhandle;
 
@@ -27,6 +28,11 @@ public class Player extends Entity {
     public Player(GamePanel gp, keyhandle keyH) {
         this.gp = gp;
         this.keyH = keyH;
+
+        solidArea = new Rectangle(0,0, gp.tileSize, gp.tileSize);
+
+        collisionON = false;
+        //gp.cChecker.checkTile(this);//
 
         setDefaultValues();
         getPlayerImage();
@@ -69,7 +75,7 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if (grounded == false) {
+        if (!grounded) {
             worldY -= jmp;
             jmp -= 1;
             grounded = false;
@@ -145,7 +151,7 @@ public class Player extends Entity {
         }
         else if (keyH.zPressed == false && animationLocked==false){
             zHoldTime=0;
-            spd = 20;
+            spd = 4;
         }
 
         //animation//
@@ -245,9 +251,10 @@ public class Player extends Entity {
     public void draw(Graphics2D g2) {
     
         g2.drawImage(image, worldX, worldY, gp.tileSize*2, gp.tileSize*2, null);
-    
-    
-    //    g2.setColor(Color.white);
+        g2.setColor(Color.RED); // Make it red so it's visible
+        g2.drawRect(worldX + solidArea.x+28, worldY + solidArea.y+35, solidArea.width-20, solidArea.height);
+        //    g2.setColor(Color.white);
     //    g2.fillRect(x, y, gp.tileSize, gp.tileSize);
     }
+
 }

@@ -46,6 +46,9 @@
       <entry_point TYPE="field" FQNAME="Characters.Entity r8" />
     </entry_points>
   </component>
+  <component name="PWA">
+    <option name="wasEnabledAtLeastOnce" value="true" />
+  </component>
   <component name="ProjectRootManager" version="2" project-jdk-name="openjdk-23 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>

@@ -15,22 +15,5 @@ public class Entity {
     public int spritecounter=0;
     public Rectangle solidArea;
     public Rectangle attackArea;
-
-    if (grounded == false) {
-        worldY -= jmp;
-        jmp -= 1;
-        grounded = false;
-        if (jmp>0){
-            air = true;
-        }
-        else{
-            air = false;
-        }
-    }
-    if (worldY >= ground) {
-        jmp = 0;
-        worldY -=jmp;
-        worldY = ground;
-        grounded = true;
-    }
+    public boolean collisionON;
 }

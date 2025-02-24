@@ -33,8 +33,8 @@ public class Player extends Entity {
     }
 
     public void setDefaultValues() {
-        x = 100;
-        y = 100;
+        worldX = 100;
+        worldY = 100;
         spd = 10;
         jmp = 0;
         jumpvl = 0;
@@ -70,7 +70,7 @@ public class Player extends Entity {
 
     public void update() {
         if (grounded == false) {
-            y -= jmp;
+            worldY -= jmp;
             jmp -= 1;
             grounded = false;
             if (jmp>0){
@@ -80,10 +80,10 @@ public class Player extends Entity {
                 air = false;
             }
         }
-        if (y >= ground) {
+        if (worldY >= ground) {
                 jmp = 0;
-            y-=jmp;
-            y = ground;
+            worldY -=jmp;
+            worldY = ground;
             grounded = true;
         }
         if (keyH.upPressed) {
@@ -91,7 +91,7 @@ public class Player extends Entity {
                 jmp = jmpfrc;
                 i=0;
                 grounded=false;
-                if (action == "l"){
+                if (action == "l" || action.equals("il")){
                     action = "jl";
                 }
                 else{
@@ -103,7 +103,7 @@ public class Player extends Entity {
             jmp -= 1;
         }
         if (keyH.rightPressed && zHoldTime == 0 && animationLocked == false) {
-            x += spd;
+            worldX += spd;
             if (grounded==true && action!= "jr"){
                 action = "r";
             }
@@ -112,7 +112,7 @@ public class Player extends Entity {
             }
         }
         if (keyH.leftPressed && zHoldTime == 0 && animationLocked == false) {
-            x -= spd;
+            worldX -= spd;
             if (grounded==true && action!= "jl"){
             action = "l";
             }
@@ -235,7 +235,7 @@ public class Player extends Entity {
         }
         spritecounter=0;
     }
-    System.out.println("Y: " + y + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
+    System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
     System.out.println("Frame index: " + i + " | Action: " + action);
 
         spritecounter++;
@@ -244,7 +244,7 @@ public class Player extends Entity {
 
     public void draw(Graphics2D g2) {
     
-        g2.drawImage(image, x, y, gp.tileSize*2, gp.tileSize*2, null);
+        g2.drawImage(image, worldX, worldY, gp.tileSize*2, gp.tileSize*2, null);
     
     
     //    g2.setColor(Color.white);

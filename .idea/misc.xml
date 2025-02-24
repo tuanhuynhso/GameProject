@@ -1,6 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="ProjectRootManager" version="2" project-jdk-name="openjdk-23" project-jdk-type="JavaSDK">
+  <component name="EntryPointsManager">
+    <entry_points version="2.0">
+      <entry_point TYPE="field" FQNAME="Characters.Entity collisionOn" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl1" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl10" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl11" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl12" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl2" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl3" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl4" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl5" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl6" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl7" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl8" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jl9" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr1" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr10" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr11" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr12" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr2" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr3" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr4" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr5" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr6" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr7" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr8" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jr9" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity jumpvl" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l1" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l2" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l3" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l4" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l5" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l6" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l7" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity l8" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r1" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r2" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r3" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r4" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r5" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r6" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r7" />
+      <entry_point TYPE="field" FQNAME="Characters.Entity r8" />
+    </entry_points>
+  </component>
+  <component name="ProjectRootManager" version="2" project-jdk-name="openjdk-23 (2)" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

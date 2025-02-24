@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 
 public class Entity {
 
-    public int x, y, i;
+    public int worldX, worldY, i;
     public int spd;
     public int jmp, jumpvl, jmpfrc, ground;
     public boolean grounded, air, animationLocked;
@@ -14,4 +14,23 @@ public class Entity {
     public String action;
     public int spritecounter=0;
     public Rectangle solidArea;
+    public Rectangle attackArea;
+
+    if (grounded == false) {
+        worldY -= jmp;
+        jmp -= 1;
+        grounded = false;
+        if (jmp>0){
+            air = true;
+        }
+        else{
+            air = false;
+        }
+    }
+    if (worldY >= ground) {
+        jmp = 0;
+        worldY -=jmp;
+        worldY = ground;
+        grounded = true;
+    }
 }

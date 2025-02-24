@@ -2,7 +2,7 @@ package main;
 
 import javax.swing.JFrame;
 
-public class game_test {
+public class Main {
     public static void main(String[] args){
 
     JFrame window = new JFrame();
@@ -10,7 +10,7 @@ public class game_test {
     window.setResizable(false);
     window.setTitle("LOL");
     
-    game_panel gamePanel = new game_panel();
+    GamePanel gamePanel = new GamePanel();
     window.add(gamePanel);
     
     window.pack();

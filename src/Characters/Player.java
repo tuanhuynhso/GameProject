@@ -1,19 +1,18 @@
 package Characters;
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import main.game_panel;
+import main.GamePanel;
 import main.keyhandle;
 
 public class Player extends Entity {
 
     public int zHoldTime;
-    game_panel gp;
+    GamePanel gp;
     keyhandle keyH;
     BufferedImage image = null;
     BufferedImage[] jl = new BufferedImage[12];
@@ -25,7 +24,7 @@ public class Player extends Entity {
     BufferedImage[] al = new BufferedImage[6];
     BufferedImage[] ar = new BufferedImage[6];
 
-    public Player(game_panel gp, keyhandle keyH) {
+    public Player(GamePanel gp, keyhandle keyH) {
         this.gp = gp;
         this.keyH = keyH;
 

@@ -31,9 +31,6 @@ public class Player extends Entity {
 
         solidArea = new Rectangle(0,0, gp.tileSize, gp.tileSize);
 
-        collisionON = false;
-        //gp.cChecker.checkTile(this);//
-
         setDefaultValues();
         getPlayerImage();
     }
@@ -49,6 +46,7 @@ public class Player extends Entity {
         grounded = false;
         action = "l";
         air = false;
+        keyPressed = "up";
     }
 
     public void getPlayerImage() {
@@ -94,9 +92,9 @@ public class Player extends Entity {
         }
         if (keyH.upPressed) {
             if (grounded == true) {
-                jmp = jmpfrc;
                 i=0;
                 grounded=false;
+                keyPressed = "up";
                 if (action == "l" || action.equals("il")){
                     action = "jl";
                 }
@@ -109,7 +107,7 @@ public class Player extends Entity {
             jmp -= 1;
         }
         if (keyH.rightPressed && zHoldTime == 0 && animationLocked == false) {
-            worldX += spd;
+            keyPressed = "right";
             if (grounded==true && action!= "jr"){
                 action = "r";
             }
@@ -118,7 +116,7 @@ public class Player extends Entity {
             }
         }
         if (keyH.leftPressed && zHoldTime == 0 && animationLocked == false) {
-            worldX -= spd;
+            keyPressed = "left";
             if (grounded==true && action!= "jl"){
             action = "l";
             }
@@ -152,6 +150,19 @@ public class Player extends Entity {
         else if (keyH.zPressed == false && animationLocked==false){
             zHoldTime=0;
             spd = 4;
+        }
+        collisionON = false;
+        gp.cChecker.checkTile(this);
+        if (collisionON == false){
+            switch (keyPressed){
+                case "up":
+                    jmp = jmpfrc;
+                case "right":
+                    worldX += spd;
+                case "left":
+                    worldX -= spd;
+
+            }
         }
 
         //animation//
@@ -242,7 +253,7 @@ public class Player extends Entity {
         spritecounter=0;
     }
     System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
-    System.out.println("Frame index: " + i + " | Action: " + action);
+    System.out.println("Frame index: " + i + " | Action: " + action +" | CollisionON: " + collisionON);
 
         spritecounter++;
 

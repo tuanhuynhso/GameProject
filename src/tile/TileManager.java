@@ -18,7 +18,7 @@ public class TileManager {
     public TileManager(GamePanel gp) {
         this.gp = gp;
         tile = new Tile[10];
-        mapTileNum = new int[gp.maxScreenCol][gp.maxScreenRow];
+        mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
         getTileImage();
         loadMap("/Maps/map01.txt");
     }
@@ -35,6 +35,15 @@ public class TileManager {
             tile[2] = new Tile();
             tile[2].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/water.png"));
             tile[2].collision = true;
+
+            tile[3] = new Tile();
+            tile[3].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/earth.png"));
+
+            tile[4] = new Tile();
+            tile[4].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/tree.png"));
+
+            tile[5] = new Tile();
+            tile[5].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/sand.png"));
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -47,9 +56,9 @@ public class TileManager {
 
             int col = 0;
             int row = 0;
-            while(col< gp.maxScreenCol && row<gp.maxScreenRow){
+            while(col< gp.maxWorldCol && row<gp.maxWorldRow){
                 String line = br.readLine();//read one line in the text file
-                while(col<gp.maxScreenCol){
+                while(col<gp.maxWorldCol){
                     String numbers[]= line.split(" ");//split numbers in that line into an array
 
                     int num=Integer.parseInt(numbers[col]);//convert string to int
@@ -57,7 +66,7 @@ public class TileManager {
                     mapTileNum[col][row]=num; //assign the exact tile into the 2D array
                     col++;//moving to the next col
                 }
-                if(col==gp.maxScreenCol){
+                if(col==gp.maxWorldCol){
                     col=0;
                     row++;
                     //if the line is full, move to the next line
@@ -74,24 +83,24 @@ public class TileManager {
 
 
     public void draw(Graphics g2d) {
-        int x =0;
-        int y =0;
-        int col =0;
-        int row =0;
 
-        while(col<gp.maxScreenCol && row<gp.maxScreenRow){
+        int worldCol =0;
+        int worldRow =0;
+
+        while(worldCol<gp.maxWorldCol && worldRow<gp.maxWorldRow){
 
             //int tileNum = mapTileNum[row][col];
-            g2d.drawImage(tile[mapTileNum[col][row]].image,x,y,gp.tileSize, gp.tileSize, null);
-            col++;
-            x+=gp.tileSize;
+            int worldX=worldCol*gp.tileSize;
+            int worldY=worldRow*gp.tileSize;
+            int screenX= worldX - gp.player.worldX + gp.player.screenX;
+            int screenY= worldY - gp.player.worldY + gp.player.screenY;
+            g2d.drawImage(tile[mapTileNum[worldCol][worldRow]].image,screenX,screenY,gp.tileSize, gp.tileSize, null);
+            worldCol++;
 
 
-            if (col==gp.maxScreenCol){
-                col=0;
-                x=0;
-                row++;
-                y+=gp.tileSize;
+            if (worldCol==gp.maxWorldCol){
+                worldCol=0;
+                worldRow++;
             }
 
 

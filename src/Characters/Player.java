@@ -16,6 +16,8 @@ public class Player extends Entity {
     public int zHoldTime;
     GamePanel gp;
     keyhandle keyH;
+    public final int screenX;
+    public final int screenY;
     BufferedImage image = null;
     BufferedImage[] jl = new BufferedImage[12];
     BufferedImage[] jr = new BufferedImage[12];
@@ -29,7 +31,8 @@ public class Player extends Entity {
     public Player(GamePanel gp, keyhandle keyH) {
         this.gp = gp;
         this.keyH = keyH;
-
+        screenY= gp.screenHeight- (3*gp.tileSize);
+        screenX= gp.screenWidth/2- (gp.tileSize);
         solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
 
         setDefaultValues();
@@ -239,7 +242,7 @@ public class Player extends Entity {
     }
 
     public void draw(Graphics2D g2) {
-        g2.drawImage(image, worldX, worldY, gp.tileSize * 2, gp.tileSize * 2, null);
+        g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
         g2.drawRect(worldX + solidArea.x + 28, worldY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
     }

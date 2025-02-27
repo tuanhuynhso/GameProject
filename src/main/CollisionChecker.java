@@ -11,36 +11,57 @@ public class CollisionChecker {
 
     public void checkTile(Entity entity) {
         int entityLeftWorldX = entity.worldX + entity.solidArea.x + 28;
-        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
-        int entityTopWorldY = entity.worldY + entity.solidArea.y + 35;
-        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
+        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width + 20;
+        int entityTopWorldY = entity.worldY + entity.solidArea.y + 60;
+        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height -20;
 
         int entityLeftCol = entityLeftWorldX / gp.tileSize;
         int entityRightCol = entityRightWorldX / gp.tileSize;
         int entityTopRow = entityTopWorldY / gp.tileSize;
         int entityBottomRow = entityBottomWorldY / gp.tileSize;
 
-        if (!entity.grounded) {
-            entityBottomRow -= entity.jmp; // case 1 solved
+        // Variable to track if the entity is on the ground
+        boolean onGround = false;
+
+        // Check collision for falling
+        int tileNum1, tileNum2;
+
+        // Falling down
+        if (entity.keyPressed!="up") {
+            System.out.println("bro i'm running rn");
+        entityBottomRow = (entityBottomWorldY + entity.jmp + 70) / gp.tileSize;
+        if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
+            tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
+            tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+            if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                onGround = true;
+                entity.jmp = 0;
+                entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 50;
+                entity.groundLevel = entityBottomRow * gp.tileSize;
+            }}
         }
 
+        // Update the grounded state based on collision
+        entity.grounded = onGround;
+
+        // Other directions
         switch (entity.keyPressed) {
             case "up":
-                int jumpRow = (entityTopWorldY - entity.jmp) / gp.tileSize;
-                if (isWithinBounds(entityLeftCol, jumpRow) && isWithinBounds(entityRightCol, jumpRow)) {
-                    int tileNum1 = gp.tileM.mapTileNum[entityLeftCol][jumpRow];
-                    int tileNum2 = gp.tileM.mapTileNum[entityRightCol][jumpRow];
+                entityTopRow = (entityTopWorldY - entity.jmp - 70) / gp.tileSize;
+                if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityRightCol, entityTopRow)) {
+                    tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
-                        entity.collisionON = true;
                         entity.jmp = 0;
+                        entity.grounded = false;
                     }
                 }
                 break;
             case "left":
                 entityLeftCol = (entityLeftWorldX - entity.spd) / gp.tileSize;
-                if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityLeftCol, entityBottomRow)) {
-                    int tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                    int tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
+                if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityLeftCol, entityTopRow)) {
+                    tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
                     }
@@ -48,9 +69,9 @@ public class CollisionChecker {
                 break;
             case "right":
                 entityRightCol = (entityRightWorldX - entity.spd) / gp.tileSize;
-                if (isWithinBounds(entityRightCol, entityTopRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
-                    int tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
-                    int tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+                if (isWithinBounds(entityRightCol, entityTopRow) && isWithinBounds(entityRightCol, entityTopRow)) {
+                    tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
                     }

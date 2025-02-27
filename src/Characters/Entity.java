@@ -16,4 +16,5 @@ public class Entity {
     public Rectangle solidArea;
     public Rectangle attackArea;
     public boolean collisionON;
+    public int groundLevel;
 }

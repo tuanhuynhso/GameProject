@@ -12,6 +12,7 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
+    public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
     keyhandle keyH;
@@ -29,7 +30,7 @@ public class Player extends Entity {
         this.gp = gp;
         this.keyH = keyH;
 
-        solidArea = new Rectangle(0,0, gp.tileSize, gp.tileSize);
+        solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
 
         setDefaultValues();
         getPlayerImage();
@@ -41,9 +42,9 @@ public class Player extends Entity {
         spd = 10;
         jmp = 0;
         jumpvl = 0;
-        jmpfrc = 30;
-        ground = 500;
+        jmpfrc = 15;
         grounded = false;
+        groundLevel = gp.screenHeight; // Initialize to the bottom of the screen
         action = "l";
         air = false;
         keyPressed = "up";
@@ -59,11 +60,11 @@ public class Player extends Entity {
                 l[i] = ImageIO.read(getClass().getResource("/Player/Running/L/tile" + String.format("%03d", i) + ".png"));
                 r[i] = ImageIO.read(getClass().getResource("/Player/Running/R/tile" + String.format("%03d", i) + ".png"));
             }
-            for (int i = 0; i < 6; i++){
+            for (int i = 0; i < 6; i++) {
                 il[i] = ImageIO.read(getClass().getResource("/Player/Idle/L/tile" + String.format("%03d", i) + ".png"));
                 ir[i] = ImageIO.read(getClass().getResource("/Player/Idle/R/tile" + String.format("%03d", i) + ".png"));
             }
-            for (int i = 0; i < 6; i++){
+            for (int i = 0; i < 6; i++) {
                 al[i] = ImageIO.read(getClass().getResource("/Player/Attacking/L/tile" + String.format("%03d", i) + ".png"));
                 ar[i] = ImageIO.read(getClass().getResource("/Player/Attacking/R/tile" + String.format("%03d", i) + ".png"));
             }
@@ -73,199 +74,173 @@ public class Player extends Entity {
     }
 
     public void update() {
-        if (!grounded) {
-            worldY -= jmp;
-            jmp -= 1;
-            grounded = false;
-            if (jmp>0){
+        collisionON = false;
+        gp.cChecker.checkTile(this);
+        if (!grounded && worldY+125 < groundLevel) {
+            worldY += jmp; // Move downwards
+            jmp += 1; // Simulate gravity
+            if (jmp > 0) {
                 air = true;
-            }
-            else{
+            } else {
                 air = false;
             }
-        }
-        if (worldY >= ground) {
-                jmp = 0;
-            worldY -=jmp;
-            worldY = ground;
+        } else {
+            jmp = 0; // Reset jump force when grounded
             grounded = true;
         }
-        if (keyH.upPressed) {
-            if (grounded == true) {
-                i=0;
-                grounded=false;
-                keyPressed = "up";
-                if (action == "l" || action.equals("il")){
-                    action = "jl";
-                }
-                else{
-                    action = "jr";
-                }
-            }
-        }
-        if (keyH.downPressed) {
-            jmp -= 1;
-        }
-        if (keyH.rightPressed && zHoldTime == 0 && animationLocked == false) {
-            keyPressed = "right";
-            if (grounded==true && action!= "jr"){
-                action = "r";
-            }
-            else {
+        // Check key inputs
+        if (keyH.upPressed && grounded) {
+            grounded = false;
+            jmp = -jmpfrc; // Apply jump force
+            keyPressed = "up";
+            if (action.equals("l") || action.equals("il")) {
+                action = "jl";
+            } else {
                 action = "jr";
             }
         }
-        if (keyH.leftPressed && zHoldTime == 0 && animationLocked == false) {
-            keyPressed = "left";
-            if (grounded==true && action!= "jl"){
-            action = "l";
+        if (keyH.rightPressed && zHoldTime == 0 && !animationLocked) {
+            keyPressed = "right";
+            if (!collisionON) {
+                worldX += spd;
             }
-            else {
+            if (grounded && !action.equals("jr")) {
+                action = "r";
+            } else {
+                action = "jr";
+            }
+        }
+        if (keyH.leftPressed && zHoldTime == 0 && !animationLocked) {
+            keyPressed = "left";
+            if (!collisionON) {
+                worldX -= spd;
+            }
+            if (grounded && !action.equals("jl")) {
+                action = "l";
+            } else {
                 action = "jl";
             }
         }
-        if (keyH.downPressed==false && keyH.leftPressed==false && keyH.rightPressed==false && keyH.upPressed==false && zHoldTime == 0 && animationLocked == false){
-            if(action=="l" || action=="al"){
+        if (!keyH.downPressed && !keyH.leftPressed && !keyH.rightPressed && !keyH.upPressed && zHoldTime == 0 && !animationLocked) {
+            if (action.equals("l") || action.equals("al")) {
                 action = "il";
             }
-            if(action=="r" || action=="ar"){
+            if (action.equals("r") || action.equals("ar")) {
                 action = "ir";
-            } 
+            }
         }
-        if (keyH.zPressed == true && zHoldTime==0){
-            if (action=="l" || action=="il"){
-            action = "al";
-            }
-            else if (action=="r" || action=="ir"){
-            action = "ar";
-            }
-            else if (action=="jl"){
-                //add stopping animation as well as aiming with mouse via rotation
+        if (keyH.zPressed && zHoldTime == 0) {
+            if (action.equals("l") || action.equals("il")) {
+                action = "al";
+            } else if (action.equals("r") || action.equals("ir")) {
+                action = "ar";
             }
             zHoldTime++;
             spd = 10;
             animationLocked = true;
-            i=0;
-        }
-        else if (keyH.zPressed == false && animationLocked==false){
-            zHoldTime=0;
+            i = 0;
+        } else if (!keyH.zPressed && !animationLocked) {
+            zHoldTime = 0;
             spd = 4;
         }
-        collisionON = false;
-        gp.cChecker.checkTile(this);
-        if (collisionON == false){
-            switch (keyPressed){
-                case "up":
-                    jmp = jmpfrc;
-                case "right":
-                    worldX += spd;
-                case "left":
-                    worldX -= spd;
 
-            }
-        }
+        // Update collision status
 
-        //animation//
-        if (spritecounter>=5){
-            if(action=="jl"){
-            if (air==false && grounded==false){
-                if (i==8) {
-                    image = jl[i];
-                }
-                if (i<8){
-                    image = jl[8];
-                    i=8;
-                }
-            }
-            else if (i<7){
-                image = jl[i];
-                i++;
-            }
-            if (grounded==true){
-                if (i<11){
-                    image = jl[i];
+        // Handle ground collision
+
+        // Handle animations
+        if (spritecounter >= 5) {
+            switch (action) {
+                case "jl":
+                    if (!air && !grounded) {
+                        if (i == 8) {
+                            image = jl[i];
+                        }
+                        if (i < 8) {
+                            image = jl[8];
+                            i = 8;
+                        }
+                    } else if (i < 7) {
+                        image = jl[i];
+                        i++;
+                    }
+                    if (grounded) {
+                        if (i < 11) {
+                            image = jl[i];
+                            i++;
+                        } else {
+                            action = "il";
+                        }
+                    }
+                    break;
+                case "jr":
+                    if (!air && !grounded) {
+                        if (i == 8) {
+                            image = jr[i];
+                        }
+                        if (i < 8) {
+                            image = jr[8];
+                            i = 8;
+                        }
+                    } else if (i < 7) {
+                        image = jr[i];
+                        i++;
+                    }
+                    if (grounded) {
+                        if (i < 11) {
+                            image = jr[i];
+                            i++;
+                        } else {
+                            action = "ir";
+                        }
+                    }
+                    break;
+                case "r":
+                    if (i >= 8) i = 0;
+                    image = r[i];
                     i++;
-                }
-                else{
-                    action = "il";
-                }
-            }
-        }
-        else if(action=="jr"){
-            if (air==false && grounded==false){
-                if (i==8) {
-                    image = jr[i];
-                }
-                if (i<8){
-                    image = jr[8];
-                    i=8;
-                }
-            }
-            else if (i<7){
-                image = jr[i];
-                i++;
-            }
-            if (grounded){
-                if (i<11){
-                    image = jr[i];
+                    break;
+                case "l":
+                    if (i >= 8) i = 0;
+                    image = l[i];
                     i++;
-                }
-                else{
-                    action = "ir";
-                }
+                    break;
+                case "il":
+                    i = (i + 1) % 6;
+                    image = il[i];
+                    break;
+                case "ir":
+                    i = (i + 1) % 6;
+                    image = ir[i];
+                    break;
+                case "ar":
+                    if (i >= 5) {
+                        i = 3;
+                        animationLocked = false;
+                    }
+                    image = ar[i];
+                    i++;
+                    break;
+                case "al":
+                    if (i >= 5) {
+                        i = 3;
+                        animationLocked = false;
+                    }
+                    image = al[i];
+                    i++;
+                    break;
             }
+            spritecounter = 0;
         }
-        
-        else if (action.equals("r")) {
-            if (i >= 8) i = 0; // Reset BEFORE setting the image
-            image = r[i];
-            i++;
-        }
-        else if (action.equals("l")) {
-            if (i >= 8) i = 0; // Reset BEFORE setting the image
-            image = l[i];
-            i++;
-        }
-        else if(action=="il"){
-            i = (i + 1) % 6; 
-            image = il[i];
-        }
-        else if(action=="ir"){
-            i = (i + 1) % 6; 
-            image = ir[i];
-        }
-        if (action=="ar"){
-            if (i>=5){
-                i=3;
-                animationLocked = false;
-            }
-           image = ar[i];
-           i++;
-        }
-        if (action=="al"){
-            if (i>=5){
-                i=3;
-                animationLocked = false;
-            }
-           image = al[i];
-           i++;
-        }
-        spritecounter=0;
-    }
-    System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
-    System.out.println("Frame index: " + i + " | Action: " + action +" | CollisionON: " + collisionON);
+        System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
+        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
 
         spritecounter++;
-
     }
 
     public void draw(Graphics2D g2) {
-    
-        g2.drawImage(image, worldX, worldY, gp.tileSize*2, gp.tileSize*2, null);
-        g2.setColor(Color.RED); // Make it red so it's visible
-        g2.drawRect(worldX + solidArea.x+28, worldY + solidArea.y+35, solidArea.width-20, solidArea.height);
-        //    g2.setColor(Color.white);
-    //    g2.fillRect(x, y, gp.tileSize, gp.tileSize);
+        g2.drawImage(image, worldX, worldY, gp.tileSize * 2, gp.tileSize * 2, null);
+        g2.setColor(Color.RED);
+        g2.drawRect(worldX + solidArea.x + 28, worldY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
     }
-
 }

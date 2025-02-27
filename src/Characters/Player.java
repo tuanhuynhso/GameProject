@@ -79,7 +79,7 @@ public class Player extends Entity {
     public void update() {
         collisionON = false;
         gp.cChecker.checkTile(this);
-        if (!grounded && worldY+125 < groundLevel) {
+        if (!grounded) {
             worldY += jmp; // Move downwards
             jmp += 1; // Simulate gravity
             if (jmp > 0) {

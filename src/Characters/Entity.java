@@ -14,7 +14,7 @@ public class Entity {
     public String action, keyPressed;
     public int spritecounter=0;
     public Rectangle solidArea;
-    public Rectangle attackArea;
+    public Rectangle attackArea = new Rectangle(0,0,0,0);
     public boolean collisionON;
     public int groundLevel;
 }

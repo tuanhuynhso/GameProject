@@ -12,6 +12,7 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
+    public int flip = 1;
     public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
@@ -19,6 +20,7 @@ public class Player extends Entity {
     public final int screenX;
     public final int screenY;
     BufferedImage image = null;
+    BufferedImage atk = null;
     BufferedImage[] jl = new BufferedImage[12];
     BufferedImage[] jr = new BufferedImage[12];
     BufferedImage[] l = new BufferedImage[8];
@@ -27,6 +29,7 @@ public class Player extends Entity {
     BufferedImage[] ir = new BufferedImage[6];
     BufferedImage[] al = new BufferedImage[6];
     BufferedImage[] ar = new BufferedImage[6];
+    BufferedImage[] a1 = new BufferedImage[4];
 
     public Player(GamePanel gp, keyhandle keyH) {
         this.gp = gp;
@@ -35,10 +38,34 @@ public class Player extends Entity {
         screenX= gp.screenWidth/2- (gp.tileSize);
         solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
 
+        attackArea.width = 100;
+        attackArea.height = 36;
+
+
         setDefaultValues();
         getPlayerImage();
     }
+    public void hitbox(){
+        int CurrentWorldX = worldX;
+        int CurrentWorldY = worldY;
+        int SolidAreaWidth = solidArea.width;
+        int SolidAreaHeight = solidArea.height;
 
+        switch (flip) {
+            case 1:
+                worldX += 50; break;
+            case -1:
+                worldX -= 50; break;
+        }
+
+        solidArea.width = attackArea.width;
+        solidArea.height = attackArea.height;
+
+        worldX = CurrentWorldX;
+        worldY = CurrentWorldY;
+        solidArea.width = SolidAreaWidth;
+        solidArea.height = SolidAreaHeight;
+    }
     public void setDefaultValues() {
         worldX = 100;
         worldY = 100;
@@ -71,6 +98,9 @@ public class Player extends Entity {
                 al[i] = ImageIO.read(getClass().getResource("/Player/Attacking/L/tile" + String.format("%03d", i) + ".png"));
                 ar[i] = ImageIO.read(getClass().getResource("/Player/Attacking/R/tile" + String.format("%03d", i) + ".png"));
             }
+            for (int i = 1; i < 5; i++) {
+                a1[i-1] = ImageIO.read(getClass().getResource("/Attacks/BasicAttacks/R/Slash_color4_frame" + String.format("%d", i) + ".png"));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,7 +132,7 @@ public class Player extends Entity {
                 action = "jr";
             }
         }
-        if (keyH.rightPressed && zHoldTime == 0 && !animationLocked) {
+        if (keyH.rightPressed && zHoldTime == 0 || keyH.rightPressed && !animationLocked) {
             keyPressed = "right";
             if (!collisionON) {
                 worldX += spd;
@@ -113,7 +143,7 @@ public class Player extends Entity {
                 action = "jr";
             }
         }
-        if (keyH.leftPressed && zHoldTime == 0 && !animationLocked) {
+        if (keyH.leftPressed && zHoldTime == 0 || keyH.leftPressed && !animationLocked) {
             keyPressed = "left";
             if (!collisionON) {
                 worldX -= spd;
@@ -135,13 +165,15 @@ public class Player extends Entity {
         if (keyH.zPressed && zHoldTime == 0) {
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
+                flip = -1;
             } else if (action.equals("r") || action.equals("ir")) {
                 action = "ar";
+                flip = 1;
             }
             zHoldTime++;
-            spd = 10;
+            spd = 4;
             animationLocked = true;
-            i = 0;
+            i = 3;
         } else if (!keyH.zPressed && !animationLocked) {
             zHoldTime = 0;
             spd = 4;
@@ -217,18 +249,26 @@ public class Player extends Entity {
                     image = ir[i];
                     break;
                 case "ar":
-                    if (i >= 5) {
-                        i = 3;
+                    if (i >= 5 || !animationLocked) {
+                        i = 2;
                         animationLocked = false;
+                        flip = 0;
+                        action = "r";
                     }
+                    hitbox();
+                    atk = a1[i-2];
                     image = ar[i];
                     i++;
                     break;
+
                 case "al":
-                    if (i >= 5) {
-                        i = 3;
+                    if (i >= 5 || !animationLocked) {
+                        i = 2;
                         animationLocked = false;
+                        flip = 0;
+                        action = "l";
                     }
+                    atk = a1[i-2];
                     image = al[i];
                     i++;
                     break;
@@ -242,8 +282,9 @@ public class Player extends Entity {
     }
 
     public void draw(Graphics2D g2) {
+        g2.drawImage(atk, screenX + 45, screenY + 40, gp.tileSize * flip * 2, gp.tileSize, null);
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
-        g2.drawRect(worldX + solidArea.x + 28, worldY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
+        g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
     }
 }

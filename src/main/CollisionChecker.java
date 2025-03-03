@@ -28,7 +28,7 @@ public class CollisionChecker {
 
         // Falling down
         if (entity.keyPressed!="a") {
-            System.out.println("bro i'm running rn");
+            //System.out.println("bro i'm running rn");//
         entityBottomRow = (entityBottomWorldY + entity.jmp + 70) / gp.tileSize;
         if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
             tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
@@ -82,5 +82,54 @@ public class CollisionChecker {
 
     private boolean isWithinBounds(int col, int row) {
         return col >= 0 && col < gp.tileM.mapTileNum.length && row >= 0 && row < gp.tileM.mapTileNum[0].length;
+    }
+    public int checkObject(Entity entity, boolean player) {
+        int index = 999;
+
+        for (int i = 0; i < gp.obj.length; i++){
+            if (gp.obj[i] != null) {
+
+                //let's figure out the entity's solid area position
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY + entity.solidArea.y+60;
+
+                //let's figure out the OBJECT's solid area pos
+                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
+                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
+
+                switch (entity.keyPressed) {
+                    case "right":
+                        entity.solidArea.x += entity.spd;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            if(gp.obj[i].collision) {
+                                entity.collisionON = true;
+                            }
+                            if (player){
+                                index = i;
+                            }
+
+                        }
+                        break;
+                    case "left":
+                            entity.solidArea.x -= entity.spd;
+                            if (entity.solidArea.intersects(gp.obj[i].solidArea)){
+                                if(gp.obj[i].collision) {
+                                    entity.collisionON = true;
+                                }
+                                if (player){
+                                    index = i;
+                                }
+                            }
+                            break;
+                }
+                entity.solidArea.x = entity.solidAreaDefaultX;
+                entity.solidArea.y = entity.solidAreaDefaultY;
+                gp.obj[i].solidArea.x = entity.solidAreaDefaultX;
+                gp.obj[i].solidArea.y = entity.solidAreaDefaultY;
+            }
+
+        }
+
+        return index;
     }
 }

@@ -1,11 +1,14 @@
 package Characters;
 
+import main.GamePanel;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class Entity {
 
+    GamePanel gp;
     public int worldX, worldY, i;
     public int spd;
     public int jmp, jumpvl, jmpfrc, ground;
@@ -15,6 +18,13 @@ public class Entity {
     public int spritecounter=0;
     public Rectangle solidArea;
     public Rectangle attackArea = new Rectangle(0,0,0,0);
+    public String name;
+    public int solidAreaDefaultX, solidAreaDefaultY;
+
     public boolean collisionON;
-    public int groundLevel;
+
+    public Entity(GamePanel gp) {
+        this.gp = gp;
+
+    }
 }

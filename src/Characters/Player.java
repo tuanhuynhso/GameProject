@@ -32,11 +32,17 @@ public class Player extends Entity {
     BufferedImage[] a1 = new BufferedImage[4];
 
     public Player(GamePanel gp, keyhandle keyH) {
+
+        super(gp);
+
         this.gp = gp;
         this.keyH = keyH;
         screenY= gp.screenHeight- (3*gp.tileSize);
         screenX= gp.screenWidth/2- (gp.tileSize);
         solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
+
 
         attackArea.width = 100;
         attackArea.height = 36;
@@ -109,6 +115,9 @@ public class Player extends Entity {
     public void update() {
         collisionON = false;
         gp.cChecker.checkTile(this);
+        int objIndex = gp.cChecker.checkObject(this, true);
+        System.out.println(objIndex);
+
         if (!grounded) {
             worldY += jmp; // Move downwards
             jmp += 1; // Simulate gravity
@@ -275,8 +284,8 @@ public class Player extends Entity {
             }
             spritecounter = 0;
         }
-        System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
-        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
+        /*System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
+        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);*/
 
         spritecounter++;
     }
@@ -286,5 +295,7 @@ public class Player extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
         g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
+        g2.drawRect(screenX +gp.obj[0].solidArea.x, screenY + gp.obj[0].solidArea.y, 48, 48);
+
     }
 }

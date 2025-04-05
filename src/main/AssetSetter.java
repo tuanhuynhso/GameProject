@@ -13,6 +13,13 @@ public class AssetSetter {
         gp.obj[0] = new OBJ_money();
         gp.obj[0].worldX = 4 * gp.tileSize;
         gp.obj[0].worldY = 47 * gp.tileSize;
+
+
+        gp.obj[1] = new OBJ_money();
+        gp.obj[1].worldX = 7 * gp.tileSize;
+        gp.obj[1].worldY = 45 * gp.tileSize;
+
+
     }
 
 }

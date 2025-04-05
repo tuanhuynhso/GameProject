@@ -93,13 +93,13 @@ public class CollisionChecker {
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY + entity.solidArea.y+60;
 
-                //let's figure out the OBJECT's solid area pos
+                //let's figure out the OBJECT's solid area position
                 gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
                 gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
 
                 switch (entity.keyPressed) {
                     case "right":
-                        entity.solidArea.x += entity.spd;
+                        entity.solidArea.x -= entity.spd;
                         if (entity.solidArea.intersects(gp.obj[i].solidArea)){
                             if(gp.obj[i].collision) {
                                 entity.collisionON = true;
@@ -111,7 +111,7 @@ public class CollisionChecker {
                         }
                         break;
                     case "left":
-                            entity.solidArea.x -= entity.spd;
+                            entity.solidArea.x += entity.spd;
                             if (entity.solidArea.intersects(gp.obj[i].solidArea)){
                                 if(gp.obj[i].collision) {
                                     entity.collisionON = true;
@@ -121,6 +121,30 @@ public class CollisionChecker {
                                 }
                             }
                             break;
+                    case "up":
+                        entity.solidArea.y -= entity.spd;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("up collision");
+                            if(gp.obj[i].collision) {
+                                entity.collisionON = true;
+                            }
+                            if (player){
+                                index = i;
+                            }
+                        }
+                        break;
+                    case "down":
+                        entity.solidArea.y += entity.spd;
+                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
+                            System.out.println("down collision");
+                            if(gp.obj[i].collision) {
+                                entity.collisionON = true;
+                            }
+                            if (player){
+                                index = i;
+                            }
+                        }
+                        break;
                 }
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;

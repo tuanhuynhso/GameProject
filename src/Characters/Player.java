@@ -112,11 +112,18 @@ public class Player extends Entity {
         }
     }
 
+
     public void update() {
         collisionON = false;
+        //CHECK TILE COLLISION
         gp.cChecker.checkTile(this);
+        //CHECK OBJECT COLLISION
         int objIndex = gp.cChecker.checkObject(this, true);
         System.out.println(objIndex);
+        pickUpObject(objIndex);
+
+
+        //
 
         if (!grounded) {
             worldY += jmp; // Move downwards
@@ -289,13 +296,19 @@ public class Player extends Entity {
 
         spritecounter++;
     }
+    public void pickUpObject(int index){
+        if (index!=999){
+            System.out.println("obj"+ index+ " will be picked up");
 
+            gp.obj[index]= null;
+        }
+    }
     public void draw(Graphics2D g2) {
         g2.drawImage(atk, screenX + 45, screenY + 40, gp.tileSize * flip * 2, gp.tileSize, null);
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
         g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
-        g2.drawRect(screenX +gp.obj[0].solidArea.x, screenY + gp.obj[0].solidArea.y, 48, 48);
+
 
     }
 }

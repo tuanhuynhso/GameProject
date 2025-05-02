@@ -31,6 +31,8 @@ public class Player extends Entity {
     BufferedImage[] ar = new BufferedImage[6];
     BufferedImage[] a1 = new BufferedImage[4];
 
+    public int moneyCount = 0;
+
     public Player(GamePanel gp, keyhandle keyH) {
 
         super(gp);
@@ -299,8 +301,19 @@ public class Player extends Entity {
     public void pickUpObject(int index){
         if (index!=999){
             System.out.println("obj"+ index+ " will be picked up");
+            String objName = gp.obj[index].name;
+            switch (objName){
+                case "money":
+                    moneyCount++;
+                    gp.obj[index]= null; // this line will delete the object from the game panel
+                    break;
+                case "door":
+                    if(moneyCount>=2){
+                        gp.obj[index]= null;
+                    }
+                    break;
+            }
 
-            gp.obj[index]= null;
         }
     }
     public void draw(Graphics2D g2) {

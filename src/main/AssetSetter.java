@@ -1,7 +1,6 @@
 package main;
 
-import Object.OBJ_money;
-import Object.OBJ_door;
+import Object.*;
 
 public class AssetSetter {
     GamePanel gp;
@@ -23,6 +22,10 @@ public class AssetSetter {
         gp.obj[2] = new OBJ_door();
         gp.obj[2].worldX = 12 * gp.tileSize;
         gp.obj[2].worldY = 47 * gp.tileSize;
+
+        gp.obj[3] = new OBJ_pekora();
+        gp.obj[3].worldX = 18 * gp.tileSize;
+        gp.obj[3].worldY = 47 * gp.tileSize;
 
 
     }

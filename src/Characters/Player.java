@@ -305,13 +305,23 @@ public class Player extends Entity {
             switch (objName){
                 case "money":
                     moneyCount++;
+                    gp.ui.showMessage(objName + " has been picked up");
                     gp.obj[index]= null; // this line will delete the object from the game panel
                     break;
                 case "door":
                     if(moneyCount>=2){
+                        moneyCount-=2;
+                        gp.ui.showMessage(objName + " has been opened");
                         gp.obj[index]= null;
                     }
+                    else {
+                        gp.ui.showMessage("Get 2 coins b4 open this lmao");
+                    }
                     break;
+                case "pekora":
+                    gp.ui.gameFinished=true;
+                    gp.obj[index]= null;
+
             }
 
         }

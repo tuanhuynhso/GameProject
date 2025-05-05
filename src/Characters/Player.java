@@ -319,6 +319,7 @@ public class Player extends Entity {
                     }
                     break;
                 case "pekora":
+                    gp.playSE(0);
                     gp.ui.gameFinished=true;
                     gp.obj[index]= null;
 

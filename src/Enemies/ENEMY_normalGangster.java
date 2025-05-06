@@ -8,5 +8,6 @@ public class ENEMY_normalGangster extends Entity {
     public ENEMY_normalGangster (GamePanel gp){
         super(gp);
     }
+    //is mine now
     
 }

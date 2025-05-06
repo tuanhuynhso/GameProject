@@ -20,7 +20,7 @@ public class UI {
         this.gp = gp;
         arial_40 = new Font("Arial", Font.PLAIN, 40);
         arial80B = new Font("Arial", Font.BOLD, 80);
-        OBJ_money money = new OBJ_money();
+        OBJ_money money = new OBJ_money(gp);
         moneyImage= money.image;
     }
 

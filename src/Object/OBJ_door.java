@@ -1,10 +1,14 @@
 package Object;
 
+import main.GamePanel;
+
 import javax.imageio.ImageIO;
 import java.io.IOException;
 
 public class OBJ_door extends SuperObject {
-    public OBJ_door() {
+    GamePanel gp;
+    public OBJ_door(GamePanel gp) {
+        this.gp = gp;
         name = "door";
 
         try {

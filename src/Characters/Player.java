@@ -8,6 +8,7 @@ import javax.imageio.ImageIO;
 
 import main.CollisionChecker;
 import main.GamePanel;
+import main.UtilityTools;
 import main.keyhandle;
 
 public class Player extends Entity {
@@ -93,6 +94,7 @@ public class Player extends Entity {
             for (int i = 0; i < 12; i++) {
                 jl[i] = ImageIO.read(getClass().getResource("/Player/jumping/L/tile" + String.format("%03d", i) + ".png"));
                 jr[i] = ImageIO.read(getClass().getResource("/Player/jumping/R/tile" + String.format("%03d", i) + ".png"));
+
             }
             for (int i = 0; i < 8; i++) {
                 l[i] = ImageIO.read(getClass().getResource("/Player/Running/L/tile" + String.format("%03d", i) + ".png"));
@@ -113,6 +115,18 @@ public class Player extends Entity {
             e.printStackTrace();
         }
     }
+    public BufferedImage setup(String imagePath){
+        UtilityTools ut = new UtilityTools();
+        BufferedImage scaledImage = null;
+        try {
+            scaledImage = ut.scaleImage(ImageIO.read(getClass().getResource(imagePath)), gp.tileSize, gp.tileSize);
+//edit here or create a new one
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return scaledImage;
+    }
 
 
     public void update() {
@@ -121,11 +135,12 @@ public class Player extends Entity {
         gp.cChecker.checkTile(this);
         //CHECK OBJECT COLLISION
         int objIndex = gp.cChecker.checkObject(this, true);
-        System.out.println(objIndex);
+//        debug if the collision works
+//       System.out.println(objIndex);
         pickUpObject(objIndex);
 
 
-        //
+
 
         if (!grounded) {
             worldY += jmp; // Move downwards

@@ -26,7 +26,7 @@ public class EventHandler {
     public void checkEvent(){
         if(hit(10,45)){
             System.out.println("hit pit");
-            // teleport(gp.playState);
+             teleport(gp.playState);
         }
         if(hit(10,47)){
             System.out.println("hit pit");
@@ -34,7 +34,7 @@ public class EventHandler {
             }
         if(hit(10,46)){
             System.out.println("hit pit");
-            // teleport(gp.playState);
+             teleport(gp.playState);
         }
         if(hit(10,48)){
             System.out.println("hit pit");
@@ -48,25 +48,25 @@ public class EventHandler {
     public boolean hit(int eventCol, int eventRow) {
         boolean hit = false;
 
-        // Get the player's current solid area position in world space
-        gp.player.solidArea.x = gp.player.worldX + gp.player.solidArea.x;
-        gp.player.solidArea.y = gp.player.worldY + gp.player.solidArea.y;
+        // Get player's current solid area position in world coordinates
+        gp.player.solidArea.x = gp.player.worldX ;
+        gp.player.solidArea.y = gp.player.worldY ;
 
-        // Properly center the eventRect inside its tile
+        // Dynamically calculate eventRect position to center it within the tile
         eventRect.x = (eventCol * gp.tileSize) + (gp.tileSize - eventRect.width) / 2;
         eventRect.y = (eventRow * gp.tileSize) + (gp.tileSize - eventRect.height) / 2;
 
-        // Check if the player's solid area collides with this eventRect
+        // Check for a collision between player and eventRect
         if (gp.player.solidArea.intersects(eventRect)) {
             hit = true;
         }
 
-        // Add the eventRect to the debug rectangles if not already added
+        // Add the current eventRect to debug rectangles for visual aid
         if (!eventRects.contains(eventRect)) {
-            eventRects.add(new Rectangle(eventRect)); // Add a new Rectangle to avoid overwriting
+            eventRects.add(new Rectangle(eventRect));
         }
 
-        // Reset positions after the check
+        // Reset player and eventRect positions back to their default values
         gp.player.solidArea.x = gp.player.solidAreaDefaultX;
         gp.player.solidArea.y = gp.player.solidAreaDefaultY;
         eventRect.x = eventRectDefaultX;
@@ -86,24 +86,40 @@ public class EventHandler {
     }
 
     public void drawEventsArea(Graphics2D g2d) {
+        // Draw trigger areas (red rectangles)
         g2d.setColor(Color.RED);
-
-        // Iterate through and draw all debug rectangles
         for (Rectangle rect : eventRects) {
-            // Convert world coordinates to screen coordinates
-            int screenX = rect.x - gp.player.worldX + gp.player.screenX;
-            int screenY = rect.y - gp.player.worldY + gp.player.screenY;
+            // Convert trigger rectangle positions from world to screen coordinates
+            int screenX = rect.x - (gp.player.worldX - gp.player.screenX);
+            int screenY = rect.y - (gp.player.worldY - gp.player.screenY);
 
-            // Check if the rectangle is within the visible screen area before drawing
-            if (rect.x + rect.width > gp.player.worldX - gp.player.screenX &&
-                    rect.x < gp.player.worldX + gp.screenWidth &&
-                    rect.y + rect.height > gp.player.worldY - gp.player.screenY &&
-                    rect.y < gp.player.worldY + gp.screenHeight) {
-                // Draw the debug rectangle
-                g2d.fillRect(screenX, screenY, rect.width, rect.height);
-                g2d.drawRect(screenX, screenY, rect.width, rect.height);
-            }
+            // Draw trigger rectangle as a red outline and filled area
+            g2d.drawRect(screenX, screenY, rect.width, rect.height);
+            g2d.setColor(new Color(255, 0, 0, 100)); // Semi-transparent fill
+            g2d.fillRect(screenX, screenY, rect.width, rect.height);
         }
+
+        // Draw player's solid area (blue rectangle)
+        g2d.setColor(Color.BLUE);
+
+        // Calculate player's solid area position in screen space
+        int playerSolidAreaScreenX = gp.player.worldX + gp.player.solidArea.x - gp.player.worldX + gp.player.screenX;
+        int playerSolidAreaScreenY = gp.player.worldY + gp.player.solidArea.y - gp.player.worldY + gp.player.screenY;
+
+        // Draw the blue solid area
+        g2d.drawRect(
+                playerSolidAreaScreenX,  // X position on the screen
+                playerSolidAreaScreenY,  // Y position on the screen
+                gp.player.solidArea.width, // Player solid area's width
+                gp.player.solidArea.height // Player solid area's height
+        );
+        g2d.setColor(new Color(0, 0, 255, 100)); // Semi-transparent blue fill
+        g2d.fillRect(
+                playerSolidAreaScreenX,
+                playerSolidAreaScreenY,
+                gp.player.solidArea.width,
+                gp.player.solidArea.height
+        );
     }
 
 

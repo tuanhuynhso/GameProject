@@ -5,11 +5,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class keyhandle implements KeyListener{
-
-    public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed;
+    GamePanel gp;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed,pPressed;
     //DEBUG
     public boolean checkDrawTime = false;
-
+    public boolean checkEvents = false;
+    public keyhandle(GamePanel gp){
+        this.gp = gp;
+    }
     @Override
     public void keyPressed(KeyEvent e) {
             int code = e.getKeyCode();
@@ -29,14 +32,19 @@ public class keyhandle implements KeyListener{
             if (code == KeyEvent.VK_Z){
                 zPressed = true;
             }
-            //DEBUG
+            if (code == KeyEvent.VK_P){
+               pPressed = true;
+               if (gp.gameState==gp.playState){
+                   gp.gameState = gp.pauseState;
+               }
+               else if (gp.gameState==gp.pauseState){
+                   gp.gameState = gp.playState;
+               }
+            }
+             //DEBUG
         if (code == KeyEvent.VK_T){
-                if (checkDrawTime==false){
-                    checkDrawTime = true;
-                }
-                else{
-                    checkDrawTime = false;
-                }
+               checkDrawTime = !checkDrawTime;
+               checkEvents = !checkEvents;
             }
     }
 

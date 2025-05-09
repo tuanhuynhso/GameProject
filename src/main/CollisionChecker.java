@@ -10,10 +10,11 @@ public class CollisionChecker {
     }
 
     public void checkTile(Entity entity) {
-        int entityLeftWorldX = entity.worldX + entity.solidArea.x + 20;
-        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width + 15 ;
-        int entityTopWorldY = entity.worldY + entity.solidArea.y + 60;
-        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height -20;
+        boolean checkUP=false;
+        int entityLeftWorldX = entity.worldX + entity.solidArea.x ;
+        int entityRightWorldX = entity.worldX + entity.solidArea.x + entity.solidArea.width;
+        int entityTopWorldY = entity.worldY + entity.solidArea.y;
+        int entityBottomWorldY = entity.worldY + entity.solidArea.y + entity.solidArea.height;
 
         int entityLeftCol = entityLeftWorldX / gp.tileSize;
         int entityRightCol = entityRightWorldX / gp.tileSize;
@@ -29,14 +30,14 @@ public class CollisionChecker {
         // Falling down
         if (entity.keyPressed!="a") {
             //System.out.println("bro i'm running rn");//
-        entityBottomRow = (entityBottomWorldY + entity.jmp + 70) / gp.tileSize;
+        entityBottomRow = (entityBottomWorldY + entity.jmp + 1) / gp.tileSize;
         if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
             tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
             tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
             if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                 onGround = true;
                 entity.jmp = 0;
-                entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 50;
+                entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 1;
             }}
         }
 
@@ -46,7 +47,7 @@ public class CollisionChecker {
         // Other directions
         switch (entity.keyPressed) {
             case "up":
-                entityTopRow = (entityTopWorldY - entity.jmp - 40) / gp.tileSize;
+                entityTopRow = (entityTopWorldY - entity.jmp + 1) / gp.tileSize;
                 if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityRightCol, entityTopRow)) {
                     tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                     tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
@@ -58,7 +59,7 @@ public class CollisionChecker {
                 }
                 break;
             case "left":
-                entityLeftCol = (entityLeftWorldX - entity.spd) / gp.tileSize;
+                entityLeftCol = (entityLeftWorldX - 1) / gp.tileSize;
                 if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityLeftCol, entityTopRow)) {
                     tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
                     tileNum2 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
@@ -68,7 +69,7 @@ public class CollisionChecker {
                 }
                 break;
             case "right":
-                entityRightCol = (entityRightWorldX + entity.spd) / gp.tileSize;
+                entityRightCol = (entityRightWorldX + entity.spd + 1) / gp.tileSize;
                 if (isWithinBounds(entityRightCol, entityTopRow) && isWithinBounds(entityRightCol, entityTopRow)) {
                     tileNum1 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
                     tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
@@ -91,7 +92,7 @@ public class CollisionChecker {
 
                 //let's figure out the entity's solid area position
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
-                entity.solidArea.y = entity.worldY + entity.solidArea.y+60;
+                entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
                 //let's figure out the OBJECT's solid area position
                 gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;

@@ -13,7 +13,8 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public int flip = 1;
+    public boolean Attacking = true, active = true;
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight;
     public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
@@ -42,7 +43,7 @@ public class Player extends Entity {
         this.keyH = keyH;
         screenY= gp.screenHeight- (3*gp.tileSize);
         screenX= gp.screenWidth/2- (gp.tileSize);
-        solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        solidArea = new Rectangle(28, 50, gp.tileSize-20, gp.tileSize-5);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
@@ -54,27 +55,33 @@ public class Player extends Entity {
         setDefaultValues();
         getPlayerImage();
     }
-    public void hitbox(){
-        int CurrentWorldX = worldX;
-        int CurrentWorldY = worldY;
-        int SolidAreaWidth = solidArea.width;
-        int SolidAreaHeight = solidArea.height;
-
-        switch (flip) {
-            case 1:
-                worldX += 50; break;
-            case -1:
-                worldX -= 50; break;
+    public void hitbox() {
+        if(active) {
+            CurrentWorldX = worldX;
+            CurrentWorldY = worldY;
+            SolidAreaWidth = solidArea.width;
+            SolidAreaHeight = solidArea.height;
+            active = false;
         }
-
-        solidArea.width = attackArea.width;
-        solidArea.height = attackArea.height;
-
+        if (Attacking) {
+            switch (flip) {
+                case 1:
+                    solidArea.width = attackArea.width;
+                    break;
+                case -1:
+                    solidArea.width = -attackArea.width;
+                    break;
+            }
+        }
+        else{
         worldX = CurrentWorldX;
         worldY = CurrentWorldY;
         solidArea.width = SolidAreaWidth;
         solidArea.height = SolidAreaHeight;
-    }
+        active = true;
+    }}
+
+
     public void setDefaultValues() {
         worldX = 100;
         worldY = 100;
@@ -297,8 +304,11 @@ public class Player extends Entity {
                         animationLocked = false;
                         flip = 0;
                         action = "r";
+                        Attacking = false;
+                        hitbox();
                     }
                     hitbox();
+                    Attacking = true;
                     atk = a1[i-2];
                     image = ar[i];
                     i++;
@@ -310,7 +320,11 @@ public class Player extends Entity {
                         animationLocked = false;
                         flip = 0;
                         action = "l";
+                        Attacking = false;
+                        hitbox();
                     }
+                    hitbox();
+                    Attacking = true;
                     atk = a1[i-2];
                     image = al[i];
                     i++;
@@ -318,7 +332,7 @@ public class Player extends Entity {
             }
             spritecounter = 0;
         }
-        System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
+        System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime + " | CurrentWorldX: " + CurrentWorldX + " | CurrentWorldY: " + CurrentWorldY);
         System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
 
         spritecounter++;
@@ -357,7 +371,6 @@ public class Player extends Entity {
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
         g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
-
-
+        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }

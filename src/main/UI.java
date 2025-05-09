@@ -9,7 +9,7 @@ import Object.*;
 public class UI {
     GamePanel gp;
     Font arial_40,arial80B;
-    BufferedImage moneyImage;
+    BufferedImage moneyImage, HP_0, HP_1, HP_2, HP_3, HP_4;
     public boolean messageOn=false;
     public String message="";
     public int messageCounter=0;
@@ -22,6 +22,14 @@ public class UI {
         arial80B = new Font("Arial", Font.BOLD, 80);
         OBJ_money money = new OBJ_money(gp);
         moneyImage= money.image;
+
+        //health lul
+        SuperObject Life = new OBJ_Life(gp);
+        HP_0 = Life.HP_0;
+        HP_1 = Life.HP_1;
+        HP_2 = Life.HP_2;
+        HP_3 = Life.HP_3;
+        HP_4 = Life.HP_4;
     }
 
     public void showMessage(String message) {
@@ -29,6 +37,7 @@ public class UI {
         messageOn=true;
     }
     public void draw(Graphics2D g2d) {
+        drawPlayerLife(g2d);
 
         if(gameFinished){
             g2d.setFont(arial80B);
@@ -80,5 +89,29 @@ public class UI {
 
         }
 
+    }
+    public void drawPlayerLife(Graphics2D g2d) {
+        System.out.println(gp.player.life);
+        int x = gp.tileSize / 2;
+        int y = gp.tileSize;
+
+        switch (gp.player.life) {
+            case 4:
+                g2d.drawImage(HP_4, x, y, gp.tileSize*4, gp.tileSize, null);
+                break;
+            case 3:
+                g2d.drawImage(HP_3, x, y, gp.tileSize*4, gp.tileSize, null);
+                break;
+            case 2:
+                g2d.drawImage(HP_2, x, y, gp.tileSize*4, gp.tileSize, null);
+                break;
+            case 1:
+                g2d.drawImage(HP_1, x, y, gp.tileSize*4, gp.tileSize, null);
+                break;
+            case 0:
+            default:
+                g2d.drawImage(HP_0, x, y, gp.tileSize*4, gp.tileSize, null);
+                break;
+        }
     }
 }

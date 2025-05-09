@@ -21,6 +21,10 @@ public class Entity {
     public String name;
     public int solidAreaDefaultX, solidAreaDefaultY;
 
+    //Character stats:
+    public int maxLife;
+    public int life;
+
     public boolean collisionON;
 
     public Entity(GamePanel gp) {

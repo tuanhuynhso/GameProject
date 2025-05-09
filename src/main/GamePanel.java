@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
@@ -26,6 +28,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldRow= 50;
     public final int maxMap=10;
     public int currentMap = 0;
+    public int Mx, My;
 
 
 
@@ -59,8 +62,14 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                Mx = e.getX();
+                My = e.getY();
+            }
+        });
     }
-
     public void setupGame() {
         aSetter.setObject();
         //playMusic(index of a song you wanna play);

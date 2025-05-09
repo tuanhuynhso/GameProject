@@ -87,6 +87,8 @@ public class Player extends Entity {
         action = "l";
         air = false;
         keyPressed = "up";
+        maxLife = 4;
+        life = maxLife;
     }
 
     public void getPlayerImage() {
@@ -196,6 +198,7 @@ public class Player extends Entity {
             }
         }
         if (keyH.zPressed && zHoldTime == 0) {
+            life-=1;
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
                 flip = -1;
@@ -203,11 +206,18 @@ public class Player extends Entity {
                 action = "ar";
                 flip = 1;
             }
+            else if (action.equals("jl")) {
+                action = "aal";
+            }
+            else {
+                action = "aar";
+            }
             zHoldTime++;
             spd = 4;
             animationLocked = true;
             i = 3;
-        } else if (!keyH.zPressed && !animationLocked) {
+        }
+        else if (!keyH.zPressed && !animationLocked) {
             zHoldTime = 0;
             spd = 4;
         }
@@ -308,8 +318,8 @@ public class Player extends Entity {
             }
             spritecounter = 0;
         }
-        /*System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
-        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);*/
+        System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime);
+        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
 
         spritecounter++;
     }

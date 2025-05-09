@@ -138,6 +138,8 @@ public class Player extends Entity {
 //        debug if the collision works
 //       System.out.println(objIndex);
         pickUpObject(objIndex);
+        //CHECK EVENT
+        gp.eHandler.checkEvent();
 
 
 

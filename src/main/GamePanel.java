@@ -3,6 +3,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 import javax.swing.JPanel;
 
@@ -26,25 +28,33 @@ public class GamePanel extends JPanel implements Runnable {
     public final int maxWorldRow= 50;
     public final int maxMap=10;
     public int currentMap = 0;
+    public int Mx, My;
 
 
 
 
     //FPS
     int FPS = 60;
-
+    //SYSTEM
     TileManager tileM = new TileManager(this);
-    keyhandle keyH = new keyhandle();
+    keyhandle keyH = new keyhandle(this);
     Sound music = new Sound();
     Sound SE= new Sound();
     public UI ui = new UI(this);
     public CollisionChecker cChecker = new CollisionChecker(this);
     public AssetSetter aSetter = new AssetSetter(this);
+    public EventHandler eHandler = new EventHandler(this);
     Thread gameThread;
 
-    //PLAYER AND OBJECTS
+    //ENTITY AND OBJECTS
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
+
+    //GAMESTATE
+    public int gameState;
+    public final int playState = 0;
+    public final int pauseState = 1;
+
 
     // Default POS for player
     int playerX = 100;
@@ -59,11 +69,19 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+        this.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                Mx = e.getX();
+                My = e.getY();
+            }
+        });
     }
-
     public void setupGame() {
         aSetter.setObject();
         //playMusic(index of a song you wanna play);
+        gameState = playState;
+
     }
 
     public void startGameThread() {
@@ -101,7 +119,12 @@ public class GamePanel extends JPanel implements Runnable {
     }
 
     public void update() {
-        player.update();
+        if (gameState == playState) {
+            player.update();
+        }
+        if (gameState == pauseState) {
+            //nothing
+        }
     }
 
     public void paintComponent(Graphics g) {
@@ -131,6 +154,9 @@ public class GamePanel extends JPanel implements Runnable {
             long passedTime = drawEnd - drawStart;
             g2.drawString("Draw time: "+ passedTime, 10, 200);
             System.out.println("Draw time: " + passedTime);
+        }
+        if(keyH.checkEvents){
+            eHandler.drawEventsArea(g2);
         }
         g2.dispose();
 

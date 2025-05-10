@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 
 public class Entity {
 
-    GamePanel gp;
+    protected GamePanel gp;
     public int worldX, worldY, i;
     public int spd;
     public int jmp, jumpvl, jmpfrc, ground;

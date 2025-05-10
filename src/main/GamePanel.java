@@ -5,10 +5,12 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import Characters.Player;
+import Enemies.ENEMY_normalGangster;
 import tile.TileManager;
 import Object.SuperObject;
 
@@ -36,7 +38,7 @@ public class GamePanel extends JPanel implements Runnable {
     //FPS
     int FPS = 60;
     //SYSTEM
-    TileManager tileM = new TileManager(this);
+    public TileManager tileM = new TileManager(this);
     keyhandle keyH = new keyhandle(this);
     Sound music = new Sound();
     Sound SE= new Sound();
@@ -62,6 +64,8 @@ public class GamePanel extends JPanel implements Runnable {
     int playerSPD = 4;
 
     TileManager tileManager = new TileManager(this);
+    // Your existing declarations
+    public ArrayList<ENEMY_normalGangster> enemies = new ArrayList<>();
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(screenWidth, screenHeight));
@@ -76,12 +80,19 @@ public class GamePanel extends JPanel implements Runnable {
                 My = e.getY();
             }
         });
+        setupGame();
     }
     public void setupGame() {
         aSetter.setObject();
         //playMusic(index of a song you wanna play);
         gameState = playState;
 
+        // Create multiple enemies at different positions
+        enemies = new ArrayList<>();
+        // These positions should be on safe platforms
+        enemies.add(new ENEMY_normalGangster(this, 300, 200));  // Example position 1
+        enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
+        // Add more enemies as needed
     }
 
     public void startGameThread() {
@@ -121,10 +132,14 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
+            for(ENEMY_normalGangster enemy : enemies) {
+                enemy.update();
+            }
         }
         if (gameState == pauseState) {
             //nothing
         }
+
     }
 
     public void paintComponent(Graphics g) {
@@ -158,6 +173,12 @@ public class GamePanel extends JPanel implements Runnable {
         if(keyH.checkEvents){
             eHandler.drawEventsArea(g2);
         }
+        
+        // Draw all enemies
+        for(ENEMY_normalGangster enemy : enemies) {
+            enemy.draw(g2);
+        }
+        
         g2.dispose();
 
     }

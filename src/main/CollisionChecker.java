@@ -2,6 +2,8 @@ package main;
 
 import Characters.Entity;
 
+import java.util.Objects;
+
 public class CollisionChecker {
     GamePanel gp;
 
@@ -27,8 +29,7 @@ public class CollisionChecker {
         int tileNum1, tileNum2;
 
         // Falling down
-        if (entity.keyPressed!="a") {
-            //System.out.println("bro i'm running rn");//
+        if (entity.keyPressed == null || !entity.keyPressed.equals("a")) {
         entityBottomRow = (entityBottomWorldY + entity.jmp + 70) / gp.tileSize;
         if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
             tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
@@ -37,13 +38,15 @@ public class CollisionChecker {
                 onGround = true;
                 entity.jmp = 0;
                 entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 50;
-            }}
+            }
         }
+    }
 
-        // Update the grounded state based on collision
-        entity.grounded = onGround;
+    // Update the grounded state based on collision
+    entity.grounded = onGround;
 
-        // Other directions
+    // Only process directional collision if keyPressed is not null
+    if (entity.keyPressed != null) {
         switch (entity.keyPressed) {
             case "up":
                 entityTopRow = (entityTopWorldY - entity.jmp - 40) / gp.tileSize;
@@ -79,6 +82,7 @@ public class CollisionChecker {
                 break;
         }
     }
+}
 
     private boolean isWithinBounds(int col, int row) {
         return col >= 0 && col < gp.tileM.mapTileNum.length && row >= 0 && row < gp.tileM.mapTileNum[0].length;

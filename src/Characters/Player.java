@@ -145,7 +145,7 @@ public class Player extends Entity {
         //CHECK OBJECT COLLISION
         int objIndex = gp.cChecker.checkObject(this, true);
 //        debug if the collision works
-//       System.out.println(objIndex);
+       System.out.println(objIndex);
         pickUpObject(objIndex);
         //CHECK EVENT
         gp.eHandler.checkEvent();

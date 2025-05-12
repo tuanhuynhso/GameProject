@@ -95,8 +95,8 @@ public class CollisionChecker {
                 entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
                 //let's figure out the OBJECT's solid area position
-                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x;
-                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y;
+                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x - 28;
+                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y - 50;
 
                 switch (entity.keyPressed) {
                     case "right":

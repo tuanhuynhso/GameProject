@@ -76,7 +76,7 @@ public class EventHandler {
     }
     public void damagePit(int gameState){
         gp.gameState=gameState;
-        gp.player.life =- 1;
+        gp.player.life -= 1;
     }
     public void teleport(int gameState){
         gp.gameState=gameState;

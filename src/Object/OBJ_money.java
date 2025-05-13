@@ -1,23 +1,20 @@
 package Object;
 
+import Characters.Entity;
 import main.GamePanel;
 
+import java.awt.*;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-public class OBJ_money extends SuperObject {
-    GamePanel gp;
+public class OBJ_money extends Entity {
     public OBJ_money(GamePanel gp) {
-        this.gp = gp;
+        super(gp);
         name = "money";
-        try {
-            image = ImageIO.read(getClass().getResourceAsStream("/Object/money_1.png"));
+        image = setup("/Object/money_1");
+        collision = false;
+        solidArea = new Rectangle(0,0,30,30    );
 
-        }
-        catch(IOException e){
-            e.printStackTrace();
-        }
-        collision = true;
     }
 }

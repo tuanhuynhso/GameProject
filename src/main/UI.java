@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.text.DecimalFormat;
 
+import Characters.Entity;
 import Object.*;
 
 public class UI {
@@ -23,7 +24,7 @@ public class UI {
         arial80B = new Font("Arial", Font.BOLD, 80);
 
         //health lul
-        SuperObject Life = new OBJ_Life(gp);
+        Entity Life = new OBJ_Life(gp);
         HP_0 = Life.HP_0;
         HP_1 = Life.HP_1;
         HP_2 = Life.HP_2;

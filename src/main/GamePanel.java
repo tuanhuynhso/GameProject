@@ -5,12 +5,16 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import javax.swing.JPanel;
 
+import Characters.Entity;
 import Characters.Player;
 import tile.TileManager;
-import Object.SuperObject;
+
 
 public class GamePanel extends JPanel implements Runnable {
     // SCREEN SETTING //
@@ -48,7 +52,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     //ENTITY AND OBJECTS
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
+    public Entity obj[] = new Entity[10];
+    ArrayList<Entity> entityList = new ArrayList<>();
 
     //GAMESTATE
     public int gameState;
@@ -137,14 +142,36 @@ public class GamePanel extends JPanel implements Runnable {
         }
         //TILE
         tileManager.draw(g2);
-        //OBJECT
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2,this);
+
+        //ENTITIES (NPCs and Objects)
+        entityList.add(player);
+//        for (int i = 0; i < npc.length; i++) {
+//            if(npc[i]!= null){
+//                entityList.add(npc[i]);
+//            }
+//        }
+        for(int i = 0; i< obj.length; i++){
+            if(obj[i]!=null){
+                entityList.add(obj[i]);
             }
         }
+        //SORT
+        Collections.sort(entityList, (e1, e2) -> {
+            int result = Integer.compare(e1.worldY, e2.worldY);
+            return result;
+        });
+
+        //DRAW ENTITIES
+        for(int i = 0; i< entityList.size(); i++){
+            entityList.get(i).draw(g2);
+        }
+        for (int i = 0; i < obj.length; i++) {
+            entityList.remove(obj[i]);
+        }
+
+
         //PLAYER
-        player.draw(g2);
+
 
         //UI
         ui.draw(g2);

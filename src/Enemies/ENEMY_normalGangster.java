@@ -26,7 +26,7 @@ public class ENEMY_normalGangster extends Entity {
         super(gp);
         this.gp = gp;
 
-        solidArea = new Rectangle(0, 0, gp.tileSize, gp.tileSize);
+        solidArea = new Rectangle(28, 50, gp.tileSize - 20, gp.tileSize);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
@@ -188,7 +188,7 @@ public class ENEMY_normalGangster extends Entity {
             
             // Draw hitbox (for debugging)
             g2.setColor(Color.RED);
-            g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height - 20);
+            g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
         }
     }
 }

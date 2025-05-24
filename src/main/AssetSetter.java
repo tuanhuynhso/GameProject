@@ -1,5 +1,6 @@
 package main;
 
+import Enemies.ENEMY_normalGangster;
 import Object.*;
 
 public class AssetSetter {
@@ -28,6 +29,11 @@ public class AssetSetter {
         gp.obj[3].worldY = 47 * gp.tileSize;
 
 
+    }
+    public void setNPC(){
+        gp.monster[0] = new ENEMY_normalGangster(gp, 300,200);
+
+        gp.monster[1] = new ENEMY_normalGangster(gp,200,200);
     }
 
 }

@@ -1,12 +1,14 @@
 package Characters;
 
 import main.GamePanel;
+import main.UtilityTools;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
 public class Entity {
+
 
     protected GamePanel gp;
     public int worldX, worldY, i;

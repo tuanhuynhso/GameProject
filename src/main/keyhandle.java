@@ -6,7 +6,7 @@ import java.awt.event.KeyListener;
 
 public class keyhandle implements KeyListener{
     GamePanel gp;
-    public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed,pPressed;
+    public boolean upPressed, downPressed, leftPressed, rightPressed, zPressed, pPressed, xPressed;
     //DEBUG
     public boolean checkDrawTime = false;
     public boolean checkEvents = false;
@@ -16,7 +16,9 @@ public class keyhandle implements KeyListener{
     @Override
     public void keyPressed(KeyEvent e) {
             int code = e.getKeyCode();
-
+            if (code == KeyEvent.VK_X) {
+                xPressed = true;
+            }
             if (code == KeyEvent.VK_UP){
                 upPressed = true;
             }
@@ -66,6 +68,9 @@ public class keyhandle implements KeyListener{
         }
         if (code == KeyEvent.VK_Z) {
             zPressed = false;
+        }
+        if (code == KeyEvent.VK_X) {
+            xPressed = false;
         }
     }
         @Override

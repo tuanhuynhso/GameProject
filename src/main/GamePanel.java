@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import Characters.Entity;
 import Characters.Player;
 import Enemies.ENEMY_normalGangster;
 import tile.TileManager;
@@ -51,6 +52,8 @@ public class GamePanel extends JPanel implements Runnable {
     //ENTITY AND OBJECTS
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[10];
+    public Entity npc[] = new Entity[10];
+    public Entity monster[] = new Entity[20];
 
     //GAMESTATE
     public int gameState;
@@ -84,9 +87,9 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void setupGame() {
         aSetter.setObject();
+        //aSetter.setNPC();
         //playMusic(index of a song you wanna play);
         gameState = playState;
-
         // Create multiple enemies at different positions
         enemies = new ArrayList<>();
         // These positions should be on safe platforms
@@ -94,6 +97,7 @@ public class GamePanel extends JPanel implements Runnable {
         enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
         // Add more enemies as needed
     }
+
 
     public void startGameThread() {
         gameThread = new Thread(this);
@@ -158,6 +162,10 @@ public class GamePanel extends JPanel implements Runnable {
                 obj[i].draw(g2,this);
             }
         }
+        //EMEMIES
+        //for(int i = 0; i < monster.length; i++) {
+        //   monster[i].draw(g2,this);
+        //}
         //PLAYER
         player.draw(g2);
 
@@ -173,12 +181,9 @@ public class GamePanel extends JPanel implements Runnable {
         if(keyH.checkEvents){
             eHandler.drawEventsArea(g2);
         }
-        
-        // Draw all enemies
         for(ENEMY_normalGangster enemy : enemies) {
             enemy.draw(g2);
         }
-        
         g2.dispose();
 
     }

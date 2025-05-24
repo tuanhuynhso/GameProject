@@ -13,8 +13,8 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public boolean Attacking = true, active = true;
-    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight;
+    public boolean Attacking = true, active = true, dash = false;
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101;
     public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
@@ -82,6 +82,7 @@ public class Player extends Entity {
             attackArea.x = solidArea.x;
             active = true;
         }
+        //int monsterIndex = gp.cChecker.checkEntity(this,gp.npc);
     }
 
 
@@ -169,7 +170,11 @@ public class Player extends Entity {
             grounded = true;
         }
         // Check key inputs
-        if (keyH.upPressed && grounded) {
+        if (keyH.xPressed && !animationLocked && dashCounter > 50){
+            dash = true;
+            dashCounter = 0;
+        }
+        if (keyH.upPressed && grounded && !animationLocked) {
             grounded = false;
             jmp = -jmpfrc; // Apply jump force
             keyPressed = "up";
@@ -184,7 +189,7 @@ public class Player extends Entity {
             if (!collisionON) {
                 worldX += spd;
             }
-            if (grounded && !action.equals("jr")) {
+            if (grounded) {
                 action = "r";
             } else {
                 action = "jr";
@@ -195,7 +200,7 @@ public class Player extends Entity {
             if (!collisionON) {
                 worldX -= spd;
             }
-            if (grounded && !action.equals("jl")) {
+            if (grounded) {
                 action = "l";
             } else {
                 action = "jl";
@@ -209,7 +214,7 @@ public class Player extends Entity {
                 action = "ir";
             }
         }
-        if (keyH.zPressed && zHoldTime == 0) {
+        if (keyH.zPressed && zHoldTime == 0 && grounded) {
             life-=1;
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
@@ -217,12 +222,6 @@ public class Player extends Entity {
             } else if (action.equals("r") || action.equals("ir")) {
                 action = "ar";
                 flip = 1;
-            }
-            else if (action.equals("jl")) {
-                action = "aal";
-            }
-            else {
-                action = "aar";
             }
             zHoldTime++;
             spd = 4;
@@ -239,6 +238,27 @@ public class Player extends Entity {
         // Handle ground collision
 
         // Handle animations
+        if (dash == true){
+            if (action.equals("l") || action.equals("jl") || action.equals("il") || action.equals("al") && dashCounter < 11 && !collisionON) {
+                worldX -= 11;
+                dashCounter++;
+            }
+            else if (collisionON) {
+                worldX -= 11;
+            }
+            if (action.equals("r") || action.equals("jr")|| action.equals("il") || action.equals("al") && dashCounter < 11 && !collisionON) {
+                worldX += 11;
+                dashCounter++;
+            }
+            else if (collisionON) {
+                worldX += 11;
+            }
+            dashCounter++;
+        }
+        if (dashCounter > 11){
+            dash = false;
+            dashCounter ++;
+        }
         if (spritecounter >= 5) {
             switch (action) {
                 case "jl":
@@ -254,7 +274,7 @@ public class Player extends Entity {
                         image = jl[i];
                         i++;
                     }
-                    if (grounded) {
+                    if (grounded && !action.equals("l") || action.equals("r")) {
                         if (i < 11) {
                             image = jl[i];
                             i++;
@@ -338,7 +358,7 @@ public class Player extends Entity {
             spritecounter = 0;
         }
         System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime + " | CurrentWorldX: " + CurrentWorldX + " | CurrentWorldY: " + CurrentWorldY);
-        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
+        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY + " | AnimationLocked: " + animationLocked + " | DashCounter: " + dashCounter + " | SpriteCounter: " + spritecounter);
 
         spritecounter++;
     }

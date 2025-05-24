@@ -26,7 +26,7 @@ public class ENEMY_normalGangster extends Entity {
         super(gp);
         this.gp = gp;
 
-        solidArea = new Rectangle(28, 50, gp.tileSize - 20, gp.tileSize);
+        solidArea = new Rectangle(28, 50, gp.tileSize, gp.tileSize);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
@@ -94,10 +94,10 @@ public class ENEMY_normalGangster extends Entity {
         int distanceFromStart = worldX - startingX; // Changed from Math.abs to track actual position
         
         // Debug output
-        System.out.println("Enemy Position - WorldX: " + worldX +
+        /*System.out.println("Enemy Position - WorldX: " + worldX +
                           " StartingX: " + startingX +
                           " Distance: " + distanceFromStart +
-                          " Direction: " + moveDirection);
+                          " Direction: " + moveDirection);*/
 
         // Change direction when reaching range limits
         if (distanceFromStart >= MOVE_RANGE) {
@@ -139,13 +139,13 @@ public class ENEMY_normalGangster extends Entity {
         }
 
         // Debug the exact values
-        System.out.println("Enemy Debug:" +
+        /*System.out.println("Enemy Debug:" +
             "\nWorld Y: " + worldY +
             "\nScreen Height: " + gp.screenHeight +
             "\nGround Level: " + groundLevel +
             "\nCollision: " + collisionON +
             "\nGrounded: " + grounded +
-            "\nJump: " + jmp);
+            "\nJump: " + jmp);*/
 
         // Handle animations
         if (spritecounter >= 5) {

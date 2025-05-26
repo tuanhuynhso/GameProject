@@ -1,6 +1,8 @@
 package main;
 
 import Characters.Entity;
+import java.util.ArrayList;
+
 
 public class CollisionChecker {
     GamePanel gp;
@@ -232,60 +234,65 @@ public class CollisionChecker {
 
         return index;
     }
-    public int checkEntity(Entity entity, Entity[] target) {
-            int index = 999;
+    public int checkEntity(Entity entity, ArrayList<Entity> targets) {
+        int index = 999;
 
-            for (int i = 0; i < target.length; i++){
-                if (target[i] != null) {
+        for (int i = 0; i < targets.size(); i++) {
+            Entity target = targets.get(i);
+            if (target != null) {
+                // Save original positions of solid areas
+                int entitySolidX = entity.solidArea.x;
+                int entitySolidY = entity.solidArea.y;
+                int targetSolidX = target.solidArea.x;
+                int targetSolidY = target.solidArea.y;
 
-                    //let's figure out the entity's solid area position
-                    entity.solidArea.x = entity.worldX + entity.solidArea.x;
-                    entity.solidArea.y = entity.worldY + entity.solidArea.y;
+                // Calculate solid area world positions
+                entity.solidArea.x = entity.worldX + entity.solidArea.x;
+                entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
-                    //let's figure out the OBJECT's solid area position
-                    target[i].solidArea.x = target[i].worldX + target[i].solidArea.x - 28;
-                    target[i].solidArea.y = target[i].worldY + target[i].solidArea.y - 50;
+                target.solidArea.x = target.worldX + target.solidArea.x;
+                target.solidArea.y = target.worldY + target.solidArea.y;
 
-                    switch (entity.keyPressed) {
-                        case "right":
-                            entity.solidArea.x -= entity.spd;
-                            if (entity.solidArea.intersects(gp.obj[i].solidArea)){
-                                    entity.collisionON = true;
-                                    index = i;
-                            }
-                            break;
-                        case "left":
-                            entity.solidArea.x += entity.spd;
-                            if (entity.solidArea.intersects(target[i].solidArea)){
-                                    entity.collisionON = true;
-                                    index = i;
-                            }
-                            break;
-                        case "up":
-                            entity.solidArea.y -= entity.spd;
-                            if (entity.solidArea.intersects(target[i].solidArea)){
-                                System.out.println("up collision");
-                                    entity.collisionON = true;
-                                    index = i;
-                            }
-                            break;
-                        case "down":
-                            entity.solidArea.y += entity.spd;
-                            if (entity.solidArea.intersects(target[i].solidArea)){
-                                System.out.println("down collision");
-                                    entity.collisionON = true;
-                                    index = i;
-                            }
-                            break;
-                    }
-                    entity.solidArea.x = entity.solidAreaDefaultX;
-                    entity.solidArea.y = entity.solidAreaDefaultY;
-                    target[i].solidArea.x = entity.solidAreaDefaultX;
-                    target[i].solidArea.y = entity.solidAreaDefaultY;
+                // Adjust entity's solid area for movement direction
+                switch (entity.keyPressed) {
+                    case "right":
+                        entity.solidArea.x += entity.spd;
+                        if (entity.solidArea.intersects(target.solidArea)) {
+                            entity.collisionON = true;
+                            index = i;
+                        }
+                        break;
+                    case "left":
+                        entity.solidArea.x -= entity.spd;
+                        if (entity.solidArea.intersects(target.solidArea)) {
+                            entity.collisionON = true;
+                            index = i;
+                        }
+                        break;
+                    case "up":
+                        entity.solidArea.y -= entity.spd;
+                        if (entity.solidArea.intersects(target.solidArea)) {
+                            System.out.println("up collision");
+                            entity.collisionON = true;
+                            index = i;
+                        }
+                        break;
+                    case "down":
+                        entity.solidArea.y += entity.spd;
+                        if (entity.solidArea.intersects(target.solidArea)) {
+                            System.out.println("down collision");
+                            entity.collisionON = true;
+                            index = i;
+                        }
+                        break;
                 }
 
+                // Restore solid areas to original local coordinates
+                entity.solidArea.x = entitySolidX;
+                entity.solidArea.y = entitySolidY;
+                target.solidArea.x = targetSolidX;
+                target.solidArea.y = targetSolidY;
             }
-
-            return index;
         }
-}
+        return index;
+    }}

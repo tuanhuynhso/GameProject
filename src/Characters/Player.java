@@ -13,7 +13,7 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public boolean Attacking = true, active = true, dash = false;
+    public boolean Attacking = true, active = true, dash = false, hit = false;
     public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101;
     public int groundLevel;
     public int zHoldTime;
@@ -73,6 +73,12 @@ public class Player extends Entity {
                     attackArea.x = 2*solidArea.x - 100;
                     break;
             }
+            int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
+            System.out.println("monster: " + monsterIndex);
+            if (monsterIndex == 4 && !hit) {
+                life -= 1;
+                hit = true;
+            }
         }
         else{
             worldX = CurrentWorldX;
@@ -81,6 +87,7 @@ public class Player extends Entity {
             attackArea.height = 0;
             attackArea.x = solidArea.x;
             active = true;
+            hit = false;
         }
         //int monsterIndex = gp.cChecker.checkEntity(this,gp.npc);
     }
@@ -178,7 +185,7 @@ public class Player extends Entity {
             grounded = false;
             jmp = -jmpfrc; // Apply jump force
             keyPressed = "up";
-            if (action.equals("l") || action.equals("il")) {
+            if (action.equals("l") || action.equals("il") ) {
                 action = "jl";
             } else {
                 action = "jr";
@@ -215,7 +222,6 @@ public class Player extends Entity {
             }
         }
         if (keyH.zPressed && zHoldTime == 0 && grounded) {
-            life-=1;
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
                 flip = -1;
@@ -242,6 +248,7 @@ public class Player extends Entity {
             if (action.equals("l") || action.equals("jl") || action.equals("il") || action.equals("al") && dashCounter < 11 && !collisionON) {
                 worldX -= 11;
                 dashCounter++;
+                System.out.println("Dash ON");
             }
             else if (collisionON) {
                 worldX -= 11;

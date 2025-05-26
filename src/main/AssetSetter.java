@@ -30,10 +30,10 @@ public class AssetSetter {
 
 
     }
-    public void setNPC(){
-        gp.monster[0] = new ENEMY_normalGangster(gp, 300,200);
-
-        gp.monster[1] = new ENEMY_normalGangster(gp,200,200);
+    public void setNPC() {
+        gp.monsters.add(new ENEMY_normalGangster(gp, 300, 200));
+        gp.monsters.add(new ENEMY_normalGangster(gp, 200, 200));
+        gp.monsters.add(new ENEMY_normalGangster(gp, 100, 200));
     }
 
 }

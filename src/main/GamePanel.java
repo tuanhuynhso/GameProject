@@ -54,6 +54,7 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject obj[] = new SuperObject[10];
     public Entity npc[] = new Entity[10];
     public Entity monster[] = new Entity[20];
+    public ArrayList<Entity> monsters = new ArrayList<>();
 
     //GAMESTATE
     public int gameState;
@@ -87,14 +88,15 @@ public class GamePanel extends JPanel implements Runnable {
     }
     public void setupGame() {
         aSetter.setObject();
+        aSetter.setNPC();
         //aSetter.setNPC();
         //playMusic(index of a song you wanna play);
         gameState = playState;
         // Create multiple enemies at different positions
         enemies = new ArrayList<>();
         // These positions should be on safe platforms
-        enemies.add(new ENEMY_normalGangster(this, 300, 200));  // Example position 1
-        enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
+        //enemies.add(new ENEMY_normalGangster(this, 300, 200));  // Example position 1
+        //enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
         // Add more enemies as needed
     }
 
@@ -136,8 +138,8 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
-            for(ENEMY_normalGangster enemy : enemies) {
-                enemy.update();
+            for (Entity monster : monsters) {
+                monster.update();
             }
         }
         if (gameState == pauseState) {
@@ -163,9 +165,11 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
         //EMEMIES
-        //for(int i = 0; i < monster.length; i++) {
-        //   monster[i].draw(g2,this);
-        //}
+        for (Entity monster : monsters) {
+            if (monster != null) {
+                monster.draw(g2);
+            }
+        }
         //PLAYER
         player.draw(g2);
 

@@ -295,4 +295,39 @@ public class CollisionChecker {
             }
         }
         return index;
-    }}
+    }
+    public int checkEntityHit(Entity entity, ArrayList<Entity> targets) {
+        int index = 999;
+
+        for (int i = 0; i < targets.size(); i++) {
+            Entity target = targets.get(i);
+            if (target != null) {
+                // Save original positions of solid areas
+                int entitySolidX = entity.attackArea.x;
+                int entitySolidY = entity.attackArea.y;
+                int targetSolidX = target.solidArea.x;
+                int targetSolidY = target.solidArea.y;
+
+                // Calculate solid area world positions
+                entity.attackArea.x = entity.worldX + entity.attackArea.x;
+                entity.attackArea.y = entity.worldY + entity.attackArea.y;
+
+                target.solidArea.x = target.worldX + target.solidArea.x;
+                target.solidArea.y = target.worldY + target.solidArea.y;
+
+                        if (entity.attackArea.intersects(target.solidArea)) {
+                            entity.collisionON = true;
+                            index = i;
+                        }
+
+
+                // Restore solid areas to original local coordinates
+                entity.attackArea.x = entitySolidX;
+                entity.attackArea.y = entitySolidY;
+                target.solidArea.x = targetSolidX;
+                target.solidArea.y = targetSolidY;
+            }
+        }
+        return index;
+    }
+}

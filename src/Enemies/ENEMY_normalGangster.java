@@ -87,6 +87,9 @@ public class ENEMY_normalGangster extends Entity {
     }
 
     public void update() {
+        if (life <= 0){
+            action = "il";
+        }
         collisionON = false;
         gp.cChecker.checkTile(this);
 
@@ -109,13 +112,15 @@ public class ENEMY_normalGangster extends Entity {
         }
 
         // Move the enemy
-        worldX += spd * moveDirection;
 
-        // Update action based on movement direction
-        if (moveDirection > 0) {
-            action = "r";
-        } else {
-            action = "l";
+        if(life >0) {
+            worldX += spd * moveDirection;
+            // Update action based on movement direction
+            if (moveDirection > 0) {
+                action = "r";
+            } else {
+                action = "l";
+            }
         }
 
         // Gravity and jumping mechanics

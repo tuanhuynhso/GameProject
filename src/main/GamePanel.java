@@ -84,7 +84,6 @@ public class GamePanel extends JPanel implements Runnable {
                 My = e.getY();
             }
         });
-        setupGame();
     }
     public void setupGame() {
         aSetter.setObject();

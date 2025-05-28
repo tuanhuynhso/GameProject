@@ -3,9 +3,12 @@ package Characters;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import Enemies.ENEMY_normalGangster;
 import main.CollisionChecker;
 import main.GamePanel;
 import main.UtilityTools;
@@ -13,8 +16,8 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public boolean Attacking = true, active = true, dash = false, hit = false;
-    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101;
+    public boolean Attacking = true, active = true, dash = false, hit = false, HIT = false;
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd;
     public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
@@ -73,11 +76,15 @@ public class Player extends Entity {
                     attackArea.x = 2*solidArea.x - 100;
                     break;
             }
-            int monsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
+            monsterIndex = gp.cChecker.checkEntityHit(this, gp.monsters);
             System.out.println("monster: " + monsterIndex);
-            if (monsterIndex == 4 && !hit) {
-                life -= 1;
+            if (monsterIndex!=999) {
+                gp.monsters.get(monsterIndex).life -= 1;
                 hit = true;
+                System.out.println("life" + gp.monsters.get(monsterIndex).life);
+                if (gp.monsters.get(monsterIndex).life <= 0) {
+                    gp.monsters.get(monsterIndex).action = "death";
+                }
             }
         }
         else{
@@ -150,6 +157,33 @@ public class Player extends Entity {
 
 
     public void update() {
+        if (cd < 100) {
+            cd++;
+            System.out.println("cooldown" + cd);
+        }
+        else if (HIT){
+            HIT = false;
+            cd = 0;
+        }
+        if (action == "il" || action == "ir"){
+            animationLocked = false;
+        }
+        int MonsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
+        if (MonsterIndex != 999 && !HIT) {
+            life -= 1;
+            HIT = true;
+            System.out.println("monster: " + MonsterIndex);
+            System.out.println("hit" + HIT);
+        }
+
+        if (hit && monsterIndex != 999) {
+            if (flip == -1) {
+                gp.monsters.get(monsterIndex).worldX -= 10;
+            }
+            else{
+                gp.monsters.get(monsterIndex).worldX += 10;
+            }
+        }
         collisionON = false;
         //CHECK TILE COLLISION
         gp.cChecker.checkTile(this);
@@ -220,6 +254,9 @@ public class Player extends Entity {
             if (action.equals("r") || action.equals("ar")) {
                 action = "ir";
             }
+        }
+        if (keyH.downPressed && !animationLocked && !grounded && jmp < 50) {
+            jmp += 1;
         }
         if (keyH.zPressed && zHoldTime == 0 && grounded) {
             if (action.equals("l") || action.equals("il")) {

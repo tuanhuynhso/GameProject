@@ -368,7 +368,6 @@ public class Player extends Entity {
 
         }
     }
-    @Override
     public void draw(Graphics2D g2) {
         g2.drawImage(atk, screenX + 45, screenY + 40, gp.tileSize * flip * 2, gp.tileSize, null);
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);

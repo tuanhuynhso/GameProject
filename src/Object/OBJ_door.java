@@ -1,18 +1,23 @@
 package Object;
 
-import Characters.Entity;
 import main.GamePanel;
 
-import java.awt.*;
+import javax.imageio.ImageIO;
+import java.io.IOException;
 
-
-public class OBJ_door extends Entity {
+public class OBJ_door extends SuperObject {
+    GamePanel gp;
     public OBJ_door(GamePanel gp) {
-       super(gp);
-       name = "door";
-       image = setup("/Object/door_1");
-       collision = true;
-        solidArea = new Rectangle(0,0,30,30    );
+        this.gp = gp;
+        name = "door";
 
+        try {
+            image = ImageIO.read(getClass().getResourceAsStream("/Object/door_1.png"));
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+        collision = true;
+        //test door: will open if you collect 2 coins
+        //update: worked
     }
 }

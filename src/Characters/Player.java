@@ -207,7 +207,6 @@ public class Player extends Entity {
             }
         }
         if (keyH.zPressed && zHoldTime == 0) {
-            life-=1;
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
                 flip = -1;
@@ -216,10 +215,12 @@ public class Player extends Entity {
                 flip = 1;
             }
             else if (action.equals("jl")) {
-                action = "aal";
+                action = "al";
+                flip = -1;
             }
             else {
-                action = "aar";
+                action = "ar";
+                flip = 1;
             }
             zHoldTime++;
             spd = 4;
@@ -305,7 +306,7 @@ public class Player extends Entity {
                         i = 2;
                         animationLocked = false;
                         flip = 0;
-                        action = "r";
+                        action = grounded ? "r" : "jr";
                         Attacking = false;
                         hitbox();
                     }
@@ -321,7 +322,7 @@ public class Player extends Entity {
                         i = 2;
                         animationLocked = false;
                         flip = 0;
-                        action = "l";
+                        action = grounded ? "l" : "jl";
                         Attacking = false;
                         hitbox();
                     }

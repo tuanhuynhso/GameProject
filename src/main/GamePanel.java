@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 
@@ -58,6 +59,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     //GAMESTATE
     public int gameState;
+    public final int titleState = -1;
     public final int playState = 0;
     public final int pauseState = 1;
 
@@ -77,11 +79,47 @@ public class GamePanel extends JPanel implements Runnable {
         this.setDoubleBuffered(true);
         this.addKeyListener(keyH);
         this.setFocusable(true);
+
+        // Mouse motion listener for hover effects
         this.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseMoved(MouseEvent e) {
                 Mx = e.getX();
                 My = e.getY();
+            }
+        });
+
+        // Mouse click listener for button clicks
+        this.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if(gameState == titleState) {
+                    for(int i = 0; i < ui.titleButtons.length; i++) {
+                        if(ui.titleButtons[i].contains(e.getX(), e.getY())) {
+                            ui.commandNum = i;
+                            if(i == 0) {
+                                gameState = playState;
+                            }
+                            else if(i == 1) {
+                                System.exit(0);
+                            }
+                        }
+                    }
+                }
+                else if(gameState == pauseState) {
+                    for(int i = 0; i < ui.pauseButtons.length; i++) {
+                        if(ui.pauseButtons[i].contains(e.getX(), e.getY())) {
+                            ui.commandNum = i;
+                            if(i == 0) {
+                                gameState = playState;
+                            }
+                            else if(i == 1) {
+                                gameState = titleState;
+                                ui.commandNum = 0;
+                            }
+                        }
+                    }
+                }
             }
         });
     }
@@ -97,6 +135,7 @@ public class GamePanel extends JPanel implements Runnable {
         //enemies.add(new ENEMY_normalGangster(this, 300, 200));  // Example position 1
         //enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
         // Add more enemies as needed
+        gameState = titleState;
     }
 
 
@@ -141,7 +180,7 @@ public class GamePanel extends JPanel implements Runnable {
                 monster.update();
             }
         }
-        if (gameState == pauseState) {
+        if (gameState == pauseState || gameState == titleState) {
             //nothing
         }
 

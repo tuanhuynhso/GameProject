@@ -439,7 +439,7 @@ public class Player extends Entity {
         g2.drawImage(atk, screenX + 45, screenY + 40, gp.tileSize * flip * 2, gp.tileSize, null);
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
-        g2.drawRect(screenX + attackArea.x, screenY + attackArea.y , attackArea.width, attackArea.height);
-        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+        //g2.drawRect(screenX + attackArea.x, screenY + attackArea.y , attackArea.width, attackArea.height);
+        //g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }

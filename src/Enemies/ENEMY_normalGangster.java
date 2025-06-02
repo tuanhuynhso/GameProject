@@ -122,6 +122,9 @@ public class ENEMY_normalGangster extends Entity {
                 action = "l";
             }
         }
+        else{
+            life = 0;
+        }
 
         // Gravity and jumping mechanics
         if (!grounded) {
@@ -177,6 +180,7 @@ public class ENEMY_normalGangster extends Entity {
             spritecounter = 0;
         }
         spritecounter++;
+        System.out.println(50-(5*(maxLife-life)));
     }
 
     public void draw(Graphics2D g2) {
@@ -190,10 +194,14 @@ public class ENEMY_normalGangster extends Entity {
             worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
             
             g2.drawImage(image, screenX, screenY+30, gp.tileSize * 2, gp.tileSize * 2, null);
+            g2.setColor(Color.black);
+            g2.drawRect(screenX + 20, screenY + 40, 50, 10);
+            g2.setColor(Color.RED);
+            g2.fillRect(screenX + 20, screenY + 40, 50*(life*100/maxLife)/100, 7);
             
             // Draw hitbox (for debugging)
-            g2.setColor(Color.RED);
-            g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+            //g2.setColor(Color.RED);
+            //g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
         }
     }
 }

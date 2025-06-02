@@ -24,6 +24,7 @@ public class Entity {
     public int spritecounter=0;
     public Rectangle solidArea;
     public Rectangle attackArea = new Rectangle(0,0,0,0);
+    public Rectangle HP_bar = new Rectangle(0,0,0,0);
     public String name;
     public int solidAreaDefaultX, solidAreaDefaultY;
 

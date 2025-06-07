@@ -79,11 +79,11 @@ public class Player extends Entity {
             monsterIndex = gp.cChecker.checkEntityHit(this, gp.monsters);
             System.out.println("monster: " + monsterIndex);
             if (monsterIndex!=999) {
-                gp.monsters.get(monsterIndex).life -= 1;
+                gp.monsters.get(gp.currentMap).get(monsterIndex).life -= 1;
                 hit = true;
-                System.out.println("life" + gp.monsters.get(monsterIndex).life);
-                if (gp.monsters.get(monsterIndex).life <= 0) {
-                    gp.monsters.get(monsterIndex).action = "death";
+                System.out.println("life" + gp.monsters.get(gp.currentMap).get(monsterIndex).life);
+                if (gp.monsters.get(gp.currentMap).get(monsterIndex).life <= 0) {
+                    gp.monsters.get(gp.currentMap).get(monsterIndex).action = "death";
                 }
             }
         }
@@ -178,10 +178,10 @@ public class Player extends Entity {
 
         if (hit && monsterIndex != 999) {
             if (flip == -1) {
-                gp.monsters.get(monsterIndex).worldX -= 10;
+                gp.monsters.get(gp.currentMap).get(monsterIndex).worldX -= 10;
             }
             else{
-                gp.monsters.get(monsterIndex).worldX += 10;
+                gp.monsters.get(gp.currentMap).get(monsterIndex).worldX += 10;
             }
         }
         collisionON = false;
@@ -409,18 +409,18 @@ public class Player extends Entity {
     public void pickUpObject(int index){
         if (index!=999){
             System.out.println("obj"+ index+ " will be picked up");
-            String objName = gp.obj[index].name;
+            String objName = gp.obj[gp.currentMap][index].name;
             switch (objName){
                 case "money":
                     moneyCount++;
                     gp.ui.showMessage(objName + " has been picked up");
-                    gp.obj[index]= null; // this line will delete the object from the game panel
+                    gp.obj[gp.currentMap][index]= null; // this line will delete the object from the game panel
                     break;
                 case "door":
                     if(moneyCount>=2){
                         moneyCount-=2;
                         gp.ui.showMessage(objName + " has been opened");
-                        gp.obj[index]= null;
+                        gp.obj[gp.currentMap][index]= null;
                     }
                     else {
                         gp.ui.showMessage("Get 2 coins b4 open this lmao");
@@ -429,7 +429,7 @@ public class Player extends Entity {
                 case "pekora":
                     gp.playSE(0);
                     gp.ui.gameFinished=true;
-                    gp.obj[index]= null;
+                    gp.obj[gp.currentMap][index]= null;
 
             }
 

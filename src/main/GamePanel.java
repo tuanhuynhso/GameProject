@@ -30,7 +30,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     public final int maxWorldCol= 50;
     public final int maxWorldRow= 50;
-    public final int maxMap=10;
+    public final int maxMap=2;
     public int currentMap = 0;
     public int Mx, My;
 
@@ -52,10 +52,10 @@ public class GamePanel extends JPanel implements Runnable {
 
     //ENTITY AND OBJECTS
     public Player player = new Player(this, keyH);
-    public SuperObject obj[] = new SuperObject[10];
-    public Entity npc[] = new Entity[10];
-    public Entity monster[] = new Entity[20];
-    public ArrayList<Entity> monsters = new ArrayList<>();
+    public SuperObject obj[][] = new SuperObject[maxMap][10];
+    public Entity npc[][] = new Entity[maxMap][10];
+    public Entity monster[][] = new Entity[maxMap][20];
+    public ArrayList<ArrayList<Entity>> monsters = new ArrayList<>();
 
     //GAMESTATE
     public int gameState;
@@ -176,7 +176,7 @@ public class GamePanel extends JPanel implements Runnable {
     public void update() {
         if (gameState == playState) {
             player.update();
-            for (Entity monster : monsters) {
+            for (Entity monster : monsters.get(currentMap)) {
                 monster.update();
             }
         }
@@ -197,13 +197,13 @@ public class GamePanel extends JPanel implements Runnable {
         //TILE
         tileManager.draw(g2);
         //OBJECT
-        for (int i = 0; i < obj.length; i++) {
-            if (obj[i] != null) {
-                obj[i].draw(g2,this);
+        for (int i = 0; i < obj[currentMap].length; i++) {
+            if (obj[currentMap][i] != null) {
+                obj[currentMap][i].draw(g2,this);
             }
         }
         //EMEMIES
-        for (Entity monster : monsters) {
+        for (Entity monster : monsters.get(currentMap)) {
             if (monster != null) {
                 monster.draw(g2);
             }

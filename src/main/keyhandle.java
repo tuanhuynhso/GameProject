@@ -88,6 +88,12 @@ public class keyhandle implements KeyListener{
         if (code == KeyEvent.VK_E) {
             checkEvents = !checkEvents;
         }
+        if (code == KeyEvent.VK_R) {
+            switch (gp.currentMap) {
+                case 0: gp.tileM.loadMap("/Maps/world01.txt", 0); break;
+                case 1: gp.tileM.loadMap("/Maps/world02.txt", 1); break;
+            }
+        }
     }
 
     public void pauseState(int code) {

@@ -34,13 +34,25 @@ public class CollisionChecker {
             //System.out.println("bro i'm running rn");//
             entityBottomRow = (entityBottomWorldY + entity.jmp + 1) / gp.tileSize;
             if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityBottomRow];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityBottomRow];
+                tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityBottomRow];
+                tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityBottomRow];
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     onGround = true;
                     entity.jmp = 0;
                     entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 1;
-                }}
+                } else {
+                    entityBottomRow = (entityBottomWorldY + (entity.jmp/2)) / gp.tileSize;
+                    if (isWithinBounds(entityLeftCol, entityBottomRow) && isWithinBounds(entityRightCol, entityBottomRow)) {
+                        tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityBottomRow];
+                        tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityBottomRow];
+                        if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                            onGround = true;
+                            entity.jmp = 0;
+                            entity.worldY = entityBottomRow * gp.tileSize - entity.solidArea.y - entity.solidArea.height - 1;
+                        }
+                    }
+                }
+            }
         }
 
         // Update the grounded state based on collision
@@ -101,8 +113,8 @@ public class CollisionChecker {
                     }
                 }*/
                 if (isWithinBounds(entityLeftCol, entityTopRow) && isWithinBounds(entityRightCol, entityTopRow)) {
-                    tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow];
-                    tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
                         entity.jmp = 10;
@@ -114,8 +126,8 @@ public class CollisionChecker {
                 //entityLeftCol = (entityLeftWorldX - 1) / gp.tileSize;
                 //entityTopRow = (entityTopWorldY - entity.jmp + 1) / gp.tileSize;
                 if (isWithinBounds(entityRightCol, (entityTopWorldY - entity.jmp + 1)/ gp.tileSize) && isWithinBounds(entityRightCol, (entityTopWorldY - entity.jmp + 1)/ gp.tileSize)) {
-                tileNum1 = gp.tileM.mapTileNum[entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
-                tileNum2 = gp.tileM.mapTileNum[entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
+                tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
+                tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
                     System.out.println("left up");
                 if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                     entity.collisionON = true;
@@ -124,8 +136,8 @@ public class CollisionChecker {
                 }
             }
                 if (isWithinBounds((entityLeftWorldX - 5)/ gp.tileSize, entityTopRow) && isWithinBounds((entityLeftWorldX - entity.spd - 1)/ gp.tileSize, entityTopRow)) {
-                    tileNum1 = gp.tileM.mapTileNum[(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
-                    tileNum2 = gp.tileM.mapTileNum[(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
                         entity.worldX += 1;
@@ -134,10 +146,10 @@ public class CollisionChecker {
                 break;
             case "right":
                 //entityRightCol = (entityRightWorldX + entity.spd + 1) / gp.tileSize;
-                //entityTopRow = (entityTopWorldY - entity.jmp + 1) / gp.tileSize;
+                entityTopRow = (entityTopWorldY - entity.jmp + 1) / gp.tileSize;
                 if (isWithinBounds(entityLeftCol, (entityTopWorldY)/ gp.tileSize) && isWithinBounds(entityRightCol, (entityTopWorldY)/ gp.tileSize)) {
-                    tileNum1 = gp.tileM.mapTileNum[entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
-                    tileNum2 = gp.tileM.mapTileNum[entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
                     System.out.println("right up");
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
@@ -146,8 +158,8 @@ public class CollisionChecker {
                     }
                 }
                 if (isWithinBounds((entityRightWorldX + entity.spd + 1)/ gp.tileSize, entityTopRow) && isWithinBounds((entityRightWorldX + entity.spd + 1)/ gp.tileSize, entityTopRow)) {
-                    tileNum1 = gp.tileM.mapTileNum[(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
-                    tileNum2 = gp.tileM.mapTileNum[(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
                     if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
                         entity.collisionON = true;
                         entity.worldX -= 1;
@@ -158,27 +170,27 @@ public class CollisionChecker {
     }
 
     private boolean isWithinBounds(int col, int row) {
-        return col >= 0 && col < gp.tileM.mapTileNum.length && row >= 0 && row < gp.tileM.mapTileNum[0].length;
+        return col >= 0 && col < gp.tileM.mapTileNum[gp.currentMap].length && row >= 0 && row < gp.tileM.mapTileNum[gp.currentMap].length;
     }
     public int checkObject(Entity entity, boolean player) {
         int index = 999;
 
-        for (int i = 0; i < gp.obj.length; i++){
-            if (gp.obj[i] != null) {
+        for (int i = 0; i < gp.obj[gp.currentMap].length; i++){
+            if (gp.obj[gp.currentMap][i] != null) {
 
                 //let's figure out the entity's solid area position
                 entity.solidArea.x = entity.worldX + entity.solidArea.x;
                 entity.solidArea.y = entity.worldY + entity.solidArea.y;
 
                 //let's figure out the OBJECT's solid area position
-                gp.obj[i].solidArea.x = gp.obj[i].worldX + gp.obj[i].solidArea.x - 28;
-                gp.obj[i].solidArea.y = gp.obj[i].worldY + gp.obj[i].solidArea.y - 50;
+                gp.obj[gp.currentMap][i].solidArea.x = gp.obj[gp.currentMap][i].worldX + gp.obj[gp.currentMap][i].solidArea.x - 28;
+                gp.obj[gp.currentMap][i].solidArea.y = gp.obj[gp.currentMap][i].worldY + gp.obj[gp.currentMap][i].solidArea.y - 50;
 
                 switch (entity.keyPressed) {
                     case "right":
                         entity.solidArea.x += entity.spd + 5;
-                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
-                            if(gp.obj[i].collision) {
+                        if (entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea)){
+                            if(gp.obj[gp.currentMap][i].collision) {
                                 entity.collisionON = true;
                             }
                             if (player){
@@ -189,8 +201,8 @@ public class CollisionChecker {
                         break;
                     case "left":
                         entity.solidArea.x -= entity.spd + 5;
-                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
-                            if(gp.obj[i].collision) {
+                        if (entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea)){
+                            if(gp.obj[gp.currentMap][i].collision) {
                                 entity.collisionON = true;
                             }
                             if (player){
@@ -201,9 +213,9 @@ public class CollisionChecker {
                     case "up":
                         entity.solidArea.x -= entity.spd;
                         entity.solidArea.y += entity.jmp;
-                        if (entity.solidArea.intersects(gp.obj[i].solidArea)){
+                        if (entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea)){
                             System.out.println("up collision");
-                            if(gp.obj[i].collision) {
+                            if(gp.obj[gp.currentMap][i].collision) {
                                 entity.collisionON = true;
                             }
                             if (player){
@@ -213,9 +225,9 @@ public class CollisionChecker {
                         break;
                 }
                 entity.solidArea.y +=  5;
-                if (entity.solidArea.intersects(gp.obj[i].solidArea) && entity.jmp > 0) {
+                if (entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea) && entity.jmp > 0) {
                     System.out.println("down collision");
-                    if(gp.obj[i].collision && !entity.grounded) {
+                    if(gp.obj[gp.currentMap][i].collision && !entity.grounded) {
                         entity.collisionON = false;
                         entity.jmp = 0;
                         entity.grounded = true;
@@ -226,19 +238,19 @@ public class CollisionChecker {
                 }
                 entity.solidArea.x = entity.solidAreaDefaultX;
                 entity.solidArea.y = entity.solidAreaDefaultY;
-                gp.obj[i].solidArea.x = entity.solidAreaDefaultX;
-                gp.obj[i].solidArea.y = entity.solidAreaDefaultY;
+                gp.obj[gp.currentMap][i].solidArea.x = entity.solidAreaDefaultX;
+                gp.obj[gp.currentMap][i].solidArea.y = entity.solidAreaDefaultY;
             }
 
         }
 
         return index;
     }
-    public int checkEntity(Entity entity, ArrayList<Entity> targets) {
+    public int checkEntity(Entity entity, ArrayList<ArrayList<Entity>> targets) {
         int index = 999;
 
         for (int i = 0; i < targets.size(); i++) {
-            Entity target = targets.get(i);
+            Entity target = targets.get(gp.currentMap).get(i);
             if (target != null) {
                 // Save original positions of solid areas
                 int entitySolidX = entity.solidArea.x;
@@ -296,11 +308,11 @@ public class CollisionChecker {
         }
         return index;
     }
-    public int checkEntityHit(Entity entity, ArrayList<Entity> targets) {
+    public int checkEntityHit(Entity entity, ArrayList<ArrayList<Entity>> targets) {
         int index = 999;
 
         for (int i = 0; i < targets.size(); i++) {
-            Entity target = targets.get(i);
+            Entity target = targets.get(gp.currentMap).get(i);
             if (target != null) {
                 // Save original positions of solid areas
                 int entitySolidX = entity.attackArea.x;

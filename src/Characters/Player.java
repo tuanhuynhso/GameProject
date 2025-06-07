@@ -16,8 +16,9 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public boolean Attacking = true, active = true, dash = false, hit = false, HIT = false;
-    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd;
+    public boolean Attacking = true, active = true, dash = false, hit = false, HIT = false, knockbackcancel = false;
+    public String hitdirection = "left";
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd = 35;
     public int groundLevel;
     public int zHoldTime;
     GamePanel gp;
@@ -155,25 +156,70 @@ public class Player extends Entity {
         return scaledImage;
     }
 
+    public void knockback(){
+        if (!knockbackcancel) {
+            spd = 0;
+            if (hitdirection.equals("right") && !collisionON) {
+                worldX -= 8 * flip;
+                if (flip == 1) {keyPressed = "left";}
+            }
+            else if (hitdirection.equals("left") && !collisionON) {
+                worldX += 8 * flip;
+                if (flip == 1) {keyPressed = "right";}
+            }
+            else if (collisionON) {
+                if (hitdirection.equals("right")) {
+                    worldX += 10;
+                }
+                else if (hitdirection.equals("left")) {
+                    worldX -= 10;
+                }
+                flip = -1;
+            }
+            gp.cChecker.checkObject(this,true);
+        }
+        else {
+            spd = 10;
+            if (hitdirection.equals("right")) {
+                worldX += 3;
+            }
+            if (hitdirection.equals("left")) {
+                worldX -= 3;
+            }
+        }
+    }
 
     public void update() {
-        if (cd < 100) {
+        gp.cChecker.checkObject(this,true);
+        if (cd < 35) {
             cd++;
+            knockbackcancel = false;
+            knockback();
             System.out.println("cooldown" + cd);
         }
         else if (HIT){
             HIT = false;
             cd = 0;
+            knockbackcancel=true;
         }
-        if (action == "il" || action == "ir"){
+        if (action == "il" || action == "ir") {
             animationLocked = false;
         }
         int MonsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
-        if (MonsterIndex != 999 && !HIT) {
+        if (MonsterIndex != 999 && !HIT && cd == 35) {
             life -= 1;
+            jmp = -15;
+            flip = 1;
             HIT = true;
+            if (action == "l" || action == "jl" || action == "il" && !collisionON){
+                hitdirection = "left";
+            }
+            else if (action == "r" || action == "jr"|| action == "ir" && !collisionON){
+                hitdirection = "right";
+            }
             System.out.println("monster: " + MonsterIndex);
             System.out.println("hit" + HIT);
+            System.out.println("life" + life);
         }
 
         if (hit && monsterIndex != 999) {
@@ -225,7 +271,7 @@ public class Player extends Entity {
                 action = "jr";
             }
         }
-        if (keyH.rightPressed && zHoldTime == 0 || keyH.rightPressed && !animationLocked) {
+        if (keyH.rightPressed && zHoldTime == 0 && keyH.rightPressed && !animationLocked) {
             keyPressed = "right";
             if (!collisionON) {
                 worldX += spd;
@@ -236,7 +282,7 @@ public class Player extends Entity {
                 action = "jr";
             }
         }
-        if (keyH.leftPressed && zHoldTime == 0 || keyH.leftPressed && !animationLocked) {
+        if (keyH.leftPressed && zHoldTime == 0 && keyH.leftPressed && !animationLocked) {
             keyPressed = "left";
             if (!collisionON) {
                 worldX -= spd;

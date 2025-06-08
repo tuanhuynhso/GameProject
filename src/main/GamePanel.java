@@ -62,6 +62,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int titleState = -1;
     public final int playState = 0;
     public final int pauseState = 1;
+    public final int deadState = 2;
 
 
     // Default POS for player
@@ -180,7 +181,7 @@ public class GamePanel extends JPanel implements Runnable {
                 monster.update();
             }
         }
-        if (gameState == pauseState || gameState == titleState) {
+        if (gameState == pauseState || gameState == titleState || gameState == deadState) {
             //nothing
         }
 

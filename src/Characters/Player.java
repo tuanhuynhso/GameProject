@@ -220,6 +220,9 @@ public class Player extends Entity {
             System.out.println("monster: " + MonsterIndex);
             System.out.println("hit" + HIT);
             System.out.println("life" + life);
+            if (life <= 0) {
+                gp.gameState = gp.deadState;
+            }
         }
 
         if (hit && monsterIndex != 999) {

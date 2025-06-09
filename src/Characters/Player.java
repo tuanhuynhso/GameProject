@@ -158,12 +158,13 @@ public class Player extends Entity {
 
     public void knockback(){
         if (!knockbackcancel) {
+            spd = 0;
             if (hitdirection.equals("right") && !collisionON) {
-                worldX -= spd;
+                worldX -= 8;
                 if (flip == 1) {keyPressed = "left";}
             }
             else if (hitdirection.equals("left") && !collisionON) {
-                worldX += spd;
+                worldX += 8;
                 if (flip == 1) {keyPressed = "right";}
             }
             else if (collisionON) {
@@ -176,6 +177,9 @@ public class Player extends Entity {
                 flip = -1;
             }
             gp.cChecker.checkObject(this,true);
+            if (life <= 0) {
+                gp.gameState = gp.deadState;
+            }
         }
         else {
             spd = 10;
@@ -350,7 +354,7 @@ public class Player extends Entity {
             }
             dashCounter++;
         }
-        if (dashCounter > 11){
+        if (dashCounter > 15){
             dash = false;
             dashCounter ++;
         }

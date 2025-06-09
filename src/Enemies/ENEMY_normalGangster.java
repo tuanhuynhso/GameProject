@@ -193,7 +193,7 @@ public class ENEMY_normalGangster extends Entity {
 
         // Check if player is in attack range
         int distanceToPlayer = Math.abs(worldX - gp.player.worldX);
-        if (distanceToPlayer <= ATTACK_RANGE && attackCooldown == 0 && !Attacking) {
+        if (distanceToPlayer <= ATTACK_RANGE && attackCooldown == 0 && !Attacking && (worldY == gp.player.worldY || worldY + solidArea.height == gp.player.worldY + gp.player.solidArea.height) && !gp.player.dash) {
             // Start attack
             Attacking = true;
             hasDealtDamage = false; // Reset damage flag for new attack
@@ -371,7 +371,7 @@ public class ENEMY_normalGangster extends Entity {
             }
 
             // Draw attack hitbox when attacking
-/*
+            g2.drawRect(solidArea.x + screenX, solidArea.y+ screenY, solidArea.width, solidArea.height);
             if (Attacking) {
                 g2.setColor(new Color(255, 0, 0, 128)); // Semi-transparent red
                 g2.fillRect(
@@ -381,7 +381,7 @@ public class ENEMY_normalGangster extends Entity {
                     attackArea.height
                 );
             }
-*/
+
             // Restore original composite if it was changed
             if (faintAnimationCompleted && originalComposite != null) {
                 g2.setComposite(originalComposite);

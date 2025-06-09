@@ -11,7 +11,7 @@ public class Entity {
 
 
     protected GamePanel gp;
-    public int worldX, worldY, i;
+    public int worldX, worldY, i, moveDirection = 0;
     public int spd;
     public int jmp, jumpvl, jmpfrc, ground;
     public boolean grounded, air, animationLocked;

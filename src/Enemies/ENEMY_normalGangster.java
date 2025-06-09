@@ -10,7 +10,6 @@ import java.io.IOException;
 
 public class ENEMY_normalGangster extends Entity {
     // Add these new variables at the class level
-    private int moveDirection = 1; // 1 for right, -1 for left
     private int startingX; // To keep track of starting position
     private final int MOVE_RANGE = 250; // How far the enemy moves in each direction
     GamePanel gp;
@@ -56,6 +55,7 @@ public class ENEMY_normalGangster extends Entity {
     }
 
     public void setDefaultValues(int startX, int startY) {
+        moveDirection = 1;
         worldX = startX;
         worldY = startY;
         startingX = startX;  // Set the patrol center point

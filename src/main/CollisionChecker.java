@@ -91,7 +91,50 @@ public class CollisionChecker {
                     }}
                 }*/
         }
-
+        switch (entity.moveDirection) {
+            case -1:
+                if (isWithinBounds(entityRightCol, (entityTopWorldY - entity.jmp + 1)/ gp.tileSize) && isWithinBounds(entityRightCol, (entityTopWorldY - entity.jmp + 1)/ gp.tileSize)) {
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    System.out.println("left up");
+                    if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                        entity.collisionON = true;
+                        entity.jmp = 5;
+                        entity.grounded = false;
+                    }
+                }
+                if (isWithinBounds((entityLeftWorldX - 5)/ gp.tileSize, entityTopRow) && isWithinBounds((entityLeftWorldX - entity.spd - 1)/ gp.tileSize, entityTopRow)) {
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][(entityLeftWorldX - 5) / gp.tileSize][entityTopRow];
+                    if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                        entity.collisionON = true;
+                        entity.worldX += 1;
+                    }
+                }
+                break;
+            case 1:
+                entityTopRow = (entityTopWorldY - entity.jmp + 1) / gp.tileSize;
+                if (isWithinBounds(entityLeftCol, (entityTopWorldY)/ gp.tileSize) && isWithinBounds(entityRightCol, (entityTopWorldY)/ gp.tileSize)) {
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][entityLeftCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][entityRightCol][(entityTopWorldY - 5)/ gp.tileSize];
+                    System.out.println("right up");
+                    if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                        entity.collisionON = true;
+                        entity.jmp = 5;
+                        entity.grounded = false;
+                    }
+                }
+                if (isWithinBounds((entityRightWorldX + entity.spd + 1)/ gp.tileSize, entityTopRow) && isWithinBounds((entityRightWorldX + entity.spd + 1)/ gp.tileSize, entityTopRow)) {
+                    tileNum1 = gp.tileM.mapTileNum[gp.currentMap][(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
+                    tileNum2 = gp.tileM.mapTileNum[gp.currentMap][(entityRightWorldX + 5) / gp.tileSize][entityTopRow];
+                    if (gp.tileM.tile[tileNum1].collision || gp.tileM.tile[tileNum2].collision) {
+                        entity.collisionON = true;
+                        entity.worldX -= 1;
+                    }
+                }
+                break;
+        }
+        if (entity.moveDirection == 0) {
         switch (entity.keyPressed) {
             case "up":
                 entityTopRow = (entityTopWorldY + entity.jmp + 1) / gp.tileSize;
@@ -166,7 +209,7 @@ public class CollisionChecker {
                     }
                 }
                 break;
-        }
+        }}
     }
 
     private boolean isWithinBounds(int col, int row) {
@@ -223,13 +266,19 @@ public class CollisionChecker {
                         }
                         break;
                 }
-                entity.solidArea.y +=  5;
+                entity.solidArea.y +=  entity.jmp + 5;
                 if (entity.solidArea.intersects(gp.obj[gp.currentMap][i].solidArea) && entity.jmp > 0) {
                     System.out.println("down collision");
                     if(gp.obj[gp.currentMap][i].collision && !entity.grounded) {
                         entity.collisionON = false;
                         entity.jmp = 0;
                         entity.grounded = true;
+                        if (entity.action == "jl"){
+                            entity.action = "l";
+                        }
+                        else if (entity.action == "jr"){
+                            entity.action = "r";
+                        }
                     }
                     if (player){
                         index = i;

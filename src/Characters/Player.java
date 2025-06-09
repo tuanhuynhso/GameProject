@@ -158,21 +158,20 @@ public class Player extends Entity {
 
     public void knockback(){
         if (!knockbackcancel) {
-            spd = 0;
             if (hitdirection.equals("right") && !collisionON) {
-                worldX -= 8 * flip;
+                worldX -= spd;
                 if (flip == 1) {keyPressed = "left";}
             }
             else if (hitdirection.equals("left") && !collisionON) {
-                worldX += 8 * flip;
+                worldX += spd;
                 if (flip == 1) {keyPressed = "right";}
             }
             else if (collisionON) {
                 if (hitdirection.equals("right")) {
-                    worldX += 10;
+                    worldX += 5;
                 }
                 else if (hitdirection.equals("left")) {
-                    worldX -= 10;
+                    worldX -= 5;
                 }
                 flip = -1;
             }
@@ -181,10 +180,10 @@ public class Player extends Entity {
         else {
             spd = 10;
             if (hitdirection.equals("right")) {
-                worldX += 3;
+                worldX += 1.5;
             }
             if (hitdirection.equals("left")) {
-                worldX -= 3;
+                worldX -= 1.5;
             }
         }
     }
@@ -205,6 +204,8 @@ public class Player extends Entity {
         if (action == "il" || action == "ir") {
             animationLocked = false;
         }
+        // Disabling hit condition when colliding with enemy
+        /*
         int MonsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
         if (MonsterIndex != 999 && !HIT && cd == 35) {
             life -= 1;
@@ -221,6 +222,7 @@ public class Player extends Entity {
             System.out.println("hit" + HIT);
             System.out.println("life" + life);
         }
+        */
 
         if (hit && monsterIndex != 999) {
             if (flip == -1) {

@@ -248,7 +248,15 @@ public class CollisionChecker {
     public int checkEntity(Entity entity, ArrayList<ArrayList<Entity>> targets) {
         int index = 999;
 
-        for (int i = 0; i < targets.size(); i++) {
+        // Null checks
+        if (targets == null || targets.isEmpty() ||
+                targets.get(gp.currentMap) == null ||
+                targets.get(gp.currentMap).isEmpty()) {
+            return index;
+        }
+
+        for (int i = 0; i < targets.get(gp.currentMap).size(); i++) {
+
             Entity target = targets.get(gp.currentMap).get(i);
             if (target != null) {
                 // Save original positions of solid areas
@@ -310,7 +318,15 @@ public class CollisionChecker {
     public int checkEntityHit(Entity entity, ArrayList<ArrayList<Entity>> targets) {
         int index = 999;
 
-        for (int i = 0; i < targets.size(); i++) {
+        // Add null checks
+        if (targets == null || targets.isEmpty() ||
+                targets.get(gp.currentMap) == null ||
+                targets.get(gp.currentMap).isEmpty()) {
+            return index;
+        }
+
+        for (int i = 0; i < targets.get(gp.currentMap).size(); i++) {
+
             Entity target = targets.get(gp.currentMap).get(i);
             if (target != null) {
                 // Save original positions of solid areas

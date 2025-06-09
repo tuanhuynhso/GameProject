@@ -36,8 +36,8 @@ public class AssetSetter {
         for (int i = 0; i < gp.maxMap; i++) {
             gp.monsters.add(new ArrayList<>());
         }
-        gp.monsters.get(0).add(new ENEMY_normalGangster(gp, 300, 200));
-        gp.monsters.get(0).add(new ENEMY_normalGangster(gp, 200, 200));
+        gp.monsters.get(0).add(new ENEMY_normalGangster(gp, 500, 200));
+        //gp.monsters.get(0).add(new ENEMY_normalGangster(gp, 200, 200));
     }
 
 }

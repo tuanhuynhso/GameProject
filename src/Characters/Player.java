@@ -3,9 +3,12 @@ package Characters;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Objects;
 
 import javax.imageio.ImageIO;
 
+import Enemies.ENEMY_normalGangster;
 import main.CollisionChecker;
 import main.GamePanel;
 import main.UtilityTools;
@@ -13,9 +16,10 @@ import main.keyhandle;
 
 public class Player extends Entity {
 
-    public boolean Attacking = true, active = true;
-    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight;
-    public int groundLevel;
+    public boolean Attacking = true, active = true, dash = false, hit = false, HIT = false, knockbackcancel = false;
+    public String hitdirection = "left";
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd = 35, lastflip;
+    public int groundLevel, lastX, lastY;
     public int zHoldTime;
     GamePanel gp;
     keyhandle keyH;
@@ -43,13 +47,11 @@ public class Player extends Entity {
         this.keyH = keyH;
         screenY= gp.screenHeight- (3*gp.tileSize);
         screenX= gp.screenWidth/2- (gp.tileSize);
+        attackArea = new Rectangle(28, 50, 0, 0);
         solidArea = new Rectangle(28, 50, gp.tileSize-20, gp.tileSize-5);
         solidAreaDefaultX = solidArea.x;
         solidAreaDefaultY = solidArea.y;
 
-
-        attackArea.width = 100;
-        attackArea.height = 36;
 
 
         setDefaultValues();
@@ -66,25 +68,42 @@ public class Player extends Entity {
         if (Attacking) {
             switch (flip) {
                 case 1:
-                    solidArea.width = attackArea.width;
+                    attackArea.width = 100;
+                    attackArea.height = 36;
                     break;
                 case -1:
-                    solidArea.width = -attackArea.width;
+                    attackArea.width = 100;
+                    attackArea.height = 36;
+                    attackArea.x = 2*solidArea.x - 100;
                     break;
+            }
+            monsterIndex = gp.cChecker.checkEntityHit(this, gp.monsters);
+            System.out.println("monster: " + monsterIndex);
+            if (monsterIndex!=999) {
+                gp.monsters.get(gp.currentMap).get(monsterIndex).life -= 1;
+                hit = true;
+                System.out.println("life" + gp.monsters.get(gp.currentMap).get(monsterIndex).life);
+                if (gp.monsters.get(gp.currentMap).get(monsterIndex).life <= 0) {
+                    gp.monsters.get(gp.currentMap).get(monsterIndex).action = "death";
+                }
             }
         }
         else{
-        worldX = CurrentWorldX;
-        worldY = CurrentWorldY;
-        solidArea.width = SolidAreaWidth;
-        solidArea.height = SolidAreaHeight;
-        active = true;
-    }}
+            worldX = CurrentWorldX;
+            worldY = CurrentWorldY;
+            attackArea.width = 0;
+            attackArea.height = 0;
+            attackArea.x = solidArea.x;
+            active = true;
+            hit = false;
+        }
+        //int monsterIndex = gp.cChecker.checkEntity(this,gp.npc);
+    }
 
 
     public void setDefaultValues() {
-        worldX = 100;
-        worldY = 100;
+        worldX = 150;
+        worldY = 2150;
         spd = 10;
         jmp = 0;
         jumpvl = 0;
@@ -137,15 +156,96 @@ public class Player extends Entity {
         return scaledImage;
     }
 
+    public void knockback(){
+        if (!knockbackcancel) {
+            spd = 0;
+            if (hitdirection.equals("right") && !collisionON) {
+                worldX -= 8;
+                if (flip == 1) {keyPressed = "left";}
+            }
+            else if (hitdirection.equals("left") && !collisionON) {
+                worldX += 8;
+                if (flip == 1) {keyPressed = "right";}
+            }
+            else if (collisionON) {
+                if (hitdirection.equals("right")) {
+                    worldX += 5;
+                }
+                else if (hitdirection.equals("left")) {
+                    worldX -= 5;
+                }
+                flip = -1;
+            }
+            gp.cChecker.checkObject(this,true);
+            if (life <= 0) {
+                gp.gameState = gp.deadState;
+            }
+        }
+        else {
+            spd = 10;
+            if (hitdirection.equals("right")) {
+                worldX += 1.5;
+            }
+            if (hitdirection.equals("left")) {
+                worldX -= 1.5;
+            }
+        }
+    }
 
     public void update() {
+        gp.cChecker.checkObject(this,true);
+        if (cd < 35) {
+            cd++;
+            knockbackcancel = false;
+            knockback();
+            System.out.println("cooldown" + cd);
+        }
+        else if (HIT){
+            HIT = false;
+            cd = 0;
+            knockbackcancel=true;
+        }
+        if (action == "il" || action == "ir") {
+            animationLocked = false;
+        }
+        // Disabling hit condition when colliding with enemy
+        /*
+        int MonsterIndex = gp.cChecker.checkEntity(this, gp.monsters);
+        if (MonsterIndex != 999 && !HIT && cd == 35) {
+            life -= 1;
+            jmp = -15;
+            flip = 1;
+            HIT = true;
+            if (action == "l" || action == "jl" || action == "il" && !collisionON){
+                hitdirection = "left";
+            }
+            else if (action == "r" || action == "jr"|| action == "ir" && !collisionON){
+                hitdirection = "right";
+            }
+            System.out.println("monster: " + MonsterIndex);
+            System.out.println("hit" + HIT);
+            System.out.println("life" + life);
+            if (life <= 0) {
+                gp.gameState = gp.deadState;
+            }
+        }
+        */
+
+        if (hit && monsterIndex != 999) {
+            if (flip == -1) {
+                gp.monsters.get(gp.currentMap).get(monsterIndex).worldX -= 10;
+            }
+            else{
+                gp.monsters.get(gp.currentMap).get(monsterIndex).worldX += 10;
+            }
+        }
         collisionON = false;
         //CHECK TILE COLLISION
         gp.cChecker.checkTile(this);
         //CHECK OBJECT COLLISION
         int objIndex = gp.cChecker.checkObject(this, true);
 //        debug if the collision works
-       System.out.println(objIndex);
+        System.out.println(objIndex);
         pickUpObject(objIndex);
         //CHECK EVENT
         gp.eHandler.checkEvent();
@@ -164,35 +264,47 @@ public class Player extends Entity {
         } else {
             jmp = 0; // Reset jump force when grounded
             grounded = true;
+            lastX = worldX;
+            lastY = worldY;
+            if (keyPressed == "left") {
+                lastflip = -1;
+            }
+            else if (keyPressed == "right") {
+                lastflip = 1;
+            }
         }
         // Check key inputs
-        if (keyH.upPressed && grounded) {
+        if (keyH.xPressed && !animationLocked && dashCounter > 50){
+            dash = true;
+            dashCounter = 0;
+        }
+        if (keyH.upPressed && grounded && !animationLocked) {
             grounded = false;
             jmp = -jmpfrc; // Apply jump force
             keyPressed = "up";
-            if (action.equals("l") || action.equals("il")) {
+            if (action.equals("l") || action.equals("il") ) {
                 action = "jl";
             } else {
                 action = "jr";
             }
         }
-        if (keyH.rightPressed && zHoldTime == 0 || keyH.rightPressed && !animationLocked) {
+        if (keyH.rightPressed && zHoldTime == 0 && keyH.rightPressed && !animationLocked) {
             keyPressed = "right";
             if (!collisionON) {
                 worldX += spd;
             }
-            if (grounded && !action.equals("jr")) {
+            if (grounded) {
                 action = "r";
             } else {
                 action = "jr";
             }
         }
-        if (keyH.leftPressed && zHoldTime == 0 || keyH.leftPressed && !animationLocked) {
+        if (keyH.leftPressed && zHoldTime == 0 && keyH.leftPressed && !animationLocked) {
             keyPressed = "left";
             if (!collisionON) {
                 worldX -= spd;
             }
-            if (grounded && !action.equals("jl")) {
+            if (grounded) {
                 action = "l";
             } else {
                 action = "jl";
@@ -206,20 +318,16 @@ public class Player extends Entity {
                 action = "ir";
             }
         }
-        if (keyH.zPressed && zHoldTime == 0) {
-            life-=1;
+        if (keyH.downPressed && !animationLocked && !grounded && jmp < 50) {
+            jmp += 1;
+        }
+        if (keyH.zPressed && zHoldTime == 0 && grounded) {
             if (action.equals("l") || action.equals("il")) {
                 action = "al";
                 flip = -1;
             } else if (action.equals("r") || action.equals("ir")) {
                 action = "ar";
                 flip = 1;
-            }
-            else if (action.equals("jl")) {
-                action = "aal";
-            }
-            else {
-                action = "aar";
             }
             zHoldTime++;
             spd = 4;
@@ -236,6 +344,28 @@ public class Player extends Entity {
         // Handle ground collision
 
         // Handle animations
+        if (dash == true){
+            if (action.equals("l") || action.equals("jl") || action.equals("il") || action.equals("al") && dashCounter < 11 && !collisionON) {
+                worldX -= 11;
+                dashCounter++;
+                System.out.println("Dash ON");
+            }
+            else if (collisionON) {
+                worldX -= 11;
+            }
+            if (action.equals("r") || action.equals("jr")|| action.equals("il") || action.equals("al") && dashCounter < 11 && !collisionON) {
+                worldX += 11;
+                dashCounter++;
+            }
+            else if (collisionON) {
+                worldX += 11;
+            }
+            dashCounter++;
+        }
+        if (dashCounter > 15){
+            dash = false;
+            dashCounter ++;
+        }
         if (spritecounter >= 5) {
             switch (action) {
                 case "jl":
@@ -251,7 +381,7 @@ public class Player extends Entity {
                         image = jl[i];
                         i++;
                     }
-                    if (grounded) {
+                    if (grounded && !action.equals("l") || action.equals("r")) {
                         if (i < 11) {
                             image = jl[i];
                             i++;
@@ -335,25 +465,25 @@ public class Player extends Entity {
             spritecounter = 0;
         }
         System.out.println("Y: " + worldY + " | Jump: " + jmp + " | Grounded: " + grounded + " | Action: " + action + " | zHoldTime: " + zHoldTime + " | CurrentWorldX: " + CurrentWorldX + " | CurrentWorldY: " + CurrentWorldY);
-        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY);
+        System.out.println("Frame index: " + i + " | Action: " + action + " | CollisionON: " + collisionON + " | GroundLevel: " + groundLevel + "| worldY: " + worldY + " | AnimationLocked: " + animationLocked + " | DashCounter: " + dashCounter + " | SpriteCounter: " + spritecounter);
 
         spritecounter++;
     }
     public void pickUpObject(int index){
         if (index!=999){
             System.out.println("obj"+ index+ " will be picked up");
-            String objName = gp.obj[index].name;
+            String objName = gp.obj[gp.currentMap][index].name;
             switch (objName){
                 case "money":
                     moneyCount++;
                     gp.ui.showMessage(objName + " has been picked up");
-                    gp.obj[index]= null; // this line will delete the object from the game panel
+                    gp.obj[gp.currentMap][index]= null; // this line will delete the object from the game panel
                     break;
                 case "door":
                     if(moneyCount>=2){
                         moneyCount-=2;
                         gp.ui.showMessage(objName + " has been opened");
-                        gp.obj[index]= null;
+                        gp.obj[gp.currentMap][index]= null;
                     }
                     else {
                         gp.ui.showMessage("Get 2 coins b4 open this lmao");
@@ -362,18 +492,17 @@ public class Player extends Entity {
                 case "pekora":
                     gp.playSE(0);
                     gp.ui.gameFinished=true;
-                    gp.obj[index]= null;
+                    gp.obj[gp.currentMap][index]= null;
 
             }
 
         }
     }
-    @Override
     public void draw(Graphics2D g2) {
         g2.drawImage(atk, screenX + 45, screenY + 40, gp.tileSize * flip * 2, gp.tileSize, null);
         g2.drawImage(image, screenX, screenY, gp.tileSize * 2, gp.tileSize * 2, null);
         g2.setColor(Color.RED);
-        g2.drawRect(screenX + solidArea.x + 28, screenY + solidArea.y + 60, solidArea.width - 20, solidArea.height -20);
-        g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+        //g2.drawRect(screenX + attackArea.x, screenY + attackArea.y , attackArea.width, attackArea.height);
+        //g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
     }
 }

@@ -63,12 +63,7 @@ public class GamePanel extends JPanel implements Runnable {
     public final int playState = 0;
     public final int pauseState = 1;
     public final int deadState = 2;
-
-
-    // Default POS for player
-    int playerX = 100;
-    int playerY = 100;
-    int playerSPD = 4;
+    public final int winState = 3;
 
     TileManager tileManager = new TileManager(this);
     // Your existing declarations
@@ -121,21 +116,48 @@ public class GamePanel extends JPanel implements Runnable {
                         }
                     }
                 }
+                else if(gameState == deadState) {
+                    for(int i = 0; i < ui.deadButtons.length; i++) {
+                        if(ui.deadButtons[i].contains(e.getX(), e.getY())) {
+                            ui.commandNum = i;
+                            if(i == 0) {
+                                monsters.clear();
+                                if (currentMap == 0) {
+                                    player.worldX = 100;
+                                    player.worldY = 2100;
+                                }
+                                else if (currentMap == 1){
+                                    player.worldX = 100;
+                                    player.worldY = 100;
+                                }
+                                player.life = player.maxLife;
+                                gameState = playState;
+                                player.knockbackcancel = true;
+                                player.moneyCount = 0;
+                                aSetter.setNPC();
+                                aSetter.setObject();
+                            }
+                        }
+                    }
+                }
+                else if (gameState == winState) {
+                    for (int i = 0; i < ui.winButtons.length; i++) {
+                        if(ui.winButtons[i].contains(e.getX(), e.getY())) {
+                            ui.commandNum = i;
+                            if(i == 0) {
+                                System.exit(0);
+                            }
+                        }
+                    }
+                }
             }
         });
     }
     public void setupGame() {
         aSetter.setObject();
         aSetter.setNPC();
-        //aSetter.setNPC();
-        //playMusic(index of a song you wanna play);
         gameState = playState;
-        // Create multiple enemies at different positions
         enemies = new ArrayList<>();
-        // These positions should be on safe platforms
-        //enemies.add(new ENEMY_normalGangster(this, 300, 200));  // Example position 1
-        //enemies.add(new ENEMY_normalGangster(this, 600, 200));  // Example position 2
-        // Add more enemies as needed
         gameState = titleState;
     }
 
@@ -223,9 +245,6 @@ public class GamePanel extends JPanel implements Runnable {
         }
         if(keyH.checkEvents){
             eHandler.drawEventsArea(g2);
-        }
-        for(ENEMY_normalGangster enemy : enemies) {
-            enemy.draw(g2);
         }
         g2.dispose();
 

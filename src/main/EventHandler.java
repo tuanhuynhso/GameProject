@@ -7,6 +7,7 @@ import java.util.List;
 public class EventHandler {
     GamePanel gp;
     Rectangle eventRect;
+    private int cd;
     private int eventRectDefaultX;
     private int eventRectDefaultY;
     private List<Rectangle> eventRects;
@@ -15,8 +16,8 @@ public class EventHandler {
         eventRect = new Rectangle();
         eventRect.x = 8;//trigger area
         eventRect.y = 8;//trigger area
-        eventRect.width=8;
-        eventRect.height=8;
+        eventRect.width= gp.tileSize;
+        eventRect.height= gp.tileSize;
         eventRectDefaultX=eventRect.x;
         eventRectDefaultY=eventRect.y;
         eventRects = new ArrayList<>();
@@ -24,25 +25,57 @@ public class EventHandler {
 
     }
     public void checkEvent(){
-        if(hit(10,45)){
-            System.out.println("hit pit");
-             damagePit(gp.playState);
-        }
-        if(hit(10,47)){
-            System.out.println("hit pit");
-          // teleport(gp.playState);
+        if (cd > 10) {
+            if (gp.currentMap == 0) {
+                if (gp.player.worldY / gp.tileSize < 47) {
+                    for (int i = 0; i < 50; i++) {
+                        if (hit(i, 47)) {
+                            System.out.println("hit pit");
+                            damagePit(gp.playState);
+                        }
+                        if (hit(i, 48)) {
+                            System.out.println("hit pit");
+                            damagePit(gp.playState);
+                        }
+                    }
+                }
+                for (int i = 9; i < 13; i++) {
+                    if (hit(i, 30)) {
+                        System.out.println("hit pit");
+                        damagePit(gp.playState);
+                    }
+                    if (hit(i, 31)) {
+                        System.out.println("hit pit");
+                        damagePit(gp.playState);
+                    }
+                }
+                for (int i = 9; i < 12; i++) {
+                    if (hit(i, 7)) {
+                        teleport(gp.playState);
+                    }
+                    if (hit(i, 8)) {
+                        teleport(gp.playState);
+                    }
+                    if (hit(i, 9)) {
+                        teleport(gp.playState);
+                    }
+                    if (hit(i, 10)) {
+                        teleport(gp.playState);
+                    }
+                }
             }
-        if(hit(10,46)){
-            System.out.println("hit pit");
-             damagePit(gp.playState);
-        }
-        if(hit(10,48)){
-            System.out.println("hit pit");
-            // teleport(gp.playState);
-        }
-        if(hit(10,49)){
-            System.out.println("hit pit");
-            // teleport(gp.playState);
+            else{
+            for (int i = 48; i < 50; i++) {
+                if (hit(i, 0)) {
+                    gp.gameState = gp.winState;
+                }
+                if (hit(i, 1)) {
+                    gp.gameState = gp.winState;
+                }
+            }
+        }}
+        else {
+            cd++;
         }
     }
     public boolean hit(int eventCol, int eventRow) {
@@ -77,12 +110,17 @@ public class EventHandler {
     public void damagePit(int gameState){
         gp.gameState=gameState;
         gp.player.life -= 1;
+        gp.player.worldX = gp.player.lastX - 20 * gp.player.lastflip;
+        gp.player.worldY = gp.player.lastY - 10;
+        cd = 0;
+        if (gp.player.life <= 0) {
+            gp.gameState = gp.deadState;
+        }
     }
     public void teleport(int gameState){
-        gp.gameState=gameState;
-        gp.player.worldX = 32 * gp.tileSize;
-        gp.player.worldY = 20 * gp.tileSize;
-
+        gp.currentMap = 1;
+        gp.player.worldX = 100;
+        gp.player.worldY = 100;
     }
 
     public void drawEventsArea(Graphics2D g2d) {

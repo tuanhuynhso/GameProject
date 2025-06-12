@@ -267,15 +267,6 @@ public class ENEMY_normalGangster extends Entity {
             grounded = false;
         }
 
-        // Debug the exact values
-        /*System.out.println("Enemy Debug:" +
-            "\nWorld Y: " + worldY +
-            "\nScreen Height: " + gp.screenHeight +
-            "\nGround Level: " + groundLevel +
-            "\nCollision: " + collisionON +
-            "\nGrounded: " + grounded +
-            "\nJump: " + jmp);*/
-
         // Handle animations
         if ((action.equals("ar") || action.equals("al")) && spritecounter >= 4) {
 // Handle attack animations
@@ -342,7 +333,6 @@ public class ENEMY_normalGangster extends Entity {
             spritecounter = 0;
         }
         spritecounter++;
-        System.out.println(50-(5*(maxLife-life)));
     }
 
     public void draw(Graphics2D g2) {
@@ -368,18 +358,6 @@ public class ENEMY_normalGangster extends Entity {
                 g2.drawRect(screenX + 20, screenY + 40, 50, 10);
                 g2.setColor(Color.RED);
                 g2.fillRect(screenX + 20, screenY + 40, 50*(life*100/maxLife)/100, 7);
-            }
-
-            // Draw attack hitbox when attacking
-            g2.drawRect(solidArea.x + screenX, solidArea.y+ screenY, solidArea.width, solidArea.height);
-            if (Attacking) {
-                g2.setColor(new Color(255, 0, 0, 128)); // Semi-transparent red
-                g2.fillRect(
-                    screenX + attackArea.x, 
-                    screenY + attackArea.y, 
-                    attackArea.width, 
-                    attackArea.height
-                );
             }
 
             // Restore original composite if it was changed

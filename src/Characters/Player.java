@@ -18,8 +18,8 @@ public class Player extends Entity {
 
     public boolean Attacking = true, active = true, dash = false, hit = false, HIT = false, knockbackcancel = false;
     public String hitdirection = "left";
-    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd = 35;
-    public int groundLevel;
+    public int flip = 1, CurrentWorldX, CurrentWorldY,SolidAreaWidth, SolidAreaHeight, dashCounter = 101, monsterIndex, cd = 35, lastflip;
+    public int groundLevel, lastX, lastY;
     public int zHoldTime;
     GamePanel gp;
     keyhandle keyH;
@@ -102,8 +102,8 @@ public class Player extends Entity {
 
 
     public void setDefaultValues() {
-        worldX = 100;
-        worldY = 100;
+        worldX = 150;
+        worldY = 2150;
         spd = 10;
         jmp = 0;
         jumpvl = 0;
@@ -264,6 +264,14 @@ public class Player extends Entity {
         } else {
             jmp = 0; // Reset jump force when grounded
             grounded = true;
+            lastX = worldX;
+            lastY = worldY;
+            if (keyPressed == "left") {
+                lastflip = -1;
+            }
+            else if (keyPressed == "right") {
+                lastflip = 1;
+            }
         }
         // Check key inputs
         if (keyH.xPressed && !animationLocked && dashCounter > 50){

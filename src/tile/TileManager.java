@@ -27,7 +27,7 @@ public class TileManager {
     public void getTileImage() {
         setup(0, "sky", false);
         setup(1, "wall", true);
-        setup(2, "water", true);
+        setup(2, "grass", false);
         setup(3, "earth", false);
         setup(4, "sky", false);
         setup(5, "sand", false);

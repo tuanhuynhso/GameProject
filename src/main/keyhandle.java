@@ -1,5 +1,7 @@
 package main;
 
+import Enemies.ENEMY_normalGangster;
+
 import java.awt.RenderingHints.Key;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -61,6 +63,12 @@ public class keyhandle implements KeyListener{
         else if (gp.gameState == gp.pauseState) {
             pauseState(code);
         }
+        else if (gp.gameState == gp.deadState) {
+            deadState(code);
+        }
+        else if (gp.gameState == gp.winState) {
+            winState(code);
+        }
     }
 
     public void titleState(int code) {
@@ -120,6 +128,38 @@ public class keyhandle implements KeyListener{
         }
         if (code == KeyEvent.VK_ESCAPE) {
             gp.gameState = gp.playState;
+        }
+    }
+
+    public void deadState(int code) {
+        if (code == KeyEvent.VK_ENTER) {
+            if (gp.ui.commandNum == 0) {
+                    gp.monsters.clear();
+                    if (gp.currentMap == 0) {
+                        gp.player.worldX = 100;
+                        gp.player.worldY = 2100;
+                    }
+                    else if (gp.currentMap == 1){
+                        gp.player.worldX = 100;
+                        gp.player.worldY = 100;
+                    }
+                gp.player.life = gp.player.maxLife;
+                gp.gameState = gp.playState;
+                gp.player.knockbackcancel = true;
+                gp.player.moneyCount = 0;
+                gp.aSetter.setNPC();
+                gp.aSetter.setObject();
+            }
+        }
+    }
+
+    public void winState(int code) {
+        if (code == KeyEvent.VK_ENTER) {
+            for (int i = 0; i < gp.ui.winButtons.length; i++) {
+                    if(i == 0) {
+                        System.exit(0);
+                    }
+                }
         }
     }
 

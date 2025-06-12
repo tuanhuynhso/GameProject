@@ -23,6 +23,7 @@ public class UI {
     public Rectangle[] titleButtons = new Rectangle[2];
     public Rectangle[] pauseButtons = new Rectangle[2];
     public Rectangle[] deadButtons = new Rectangle[1];
+    public Rectangle[] winButtons = new Rectangle[1];
 
     public UI(GamePanel gp) {
         this.gp = gp;
@@ -38,6 +39,9 @@ public class UI {
         }
         for(int i = 0; i < deadButtons.length; i++) {
             deadButtons[i] = new Rectangle();
+        }
+        for(int i = 0; i < winButtons.length; i++) {
+            winButtons[i] = new Rectangle();
         }
 
         //health lul
@@ -77,6 +81,9 @@ public class UI {
         }
         else if (gp.gameState == gp.deadState) {
             drawDeadScreen();
+        }
+        else if (gp.gameState == gp.winState) {
+            drawWinScreen();
         }
     }
 
@@ -188,6 +195,36 @@ public class UI {
             if(deadButtons[i].contains(gp.Mx, gp.My)) {
                 g2d.setColor(new Color(255, 255, 255, 50));
                 g2d.fill(deadButtons[i]);
+                g2d.setColor(Color.WHITE);
+                commandNum = i;
+            }
+        }
+
+    }
+    public void drawWinScreen() {
+        g2d.setFont(arial80B);
+        String text = "YOU WON!";
+        int x = getXForCenteredText(text);
+        int y = gp.screenHeight / 2;
+        g2d.drawString(text, x, y);
+
+        g2d.setFont(arial_40);
+        text = "QUIT";
+        x = getXForCenteredText(text);
+        y += gp.tileSize * 3;
+        g2d.drawString(text, x, y);
+        if (commandNum == 0) {
+            g2d.drawString(">", x - gp.tileSize, y);
+        }
+        winButtons[0].x = x - gp.tileSize;
+        winButtons[0].y = y - 30;
+        winButtons[0].width = g2d.getFontMetrics().stringWidth(text) + gp.tileSize;
+        winButtons[0].height = 40;
+
+        for(int i = 0; i < winButtons.length; i++) {
+            if(winButtons[i].contains(gp.Mx, gp.My)) {
+                g2d.setColor(new Color(255, 255, 255, 50));
+                g2d.fill(winButtons[i]);
                 g2d.setColor(Color.WHITE);
                 commandNum = i;
             }

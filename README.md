@@ -37,4 +37,4 @@ java -jar GameProject.jar
 git clone https://github.com/tuanhuynhso/GameProject
 ```
 * ***Recommended***: Use an IDE ( preferably JetBrains' Intellij IDEA ) to build
-* Main class: root.PlantsVersusZombies
+* Main class: src/main/Main.java

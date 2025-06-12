@@ -9,7 +9,7 @@ Here is our [Report](https://docs.google.com/document/d/1WLzj8UrHD5L7XrULExetXKc
 
 # Download
 Download the latest release and extract it, which contains 3 things:
-* Resources
+* Resources (already included in GameProject.jar)
 * GameProject.jar
 * Executable scripts:
     * RunGame.cmd ( ***Windows*** ) 
@@ -19,6 +19,13 @@ Download the latest release and extract it, which contains 3 things:
 1. Go to the extracted folder
 2. You may have to give the script executable permission ( ***MacOS*** and ***Linux*** )
 3. Double click the script to run it
+
+Make it Executable (***MacOS*** and ***Linux*** Only):
+Open a terminal, navigate to the directory where you saved RunGame.sh, and run:
+
+chmod +x RunGame.sh
+
+This gives the script permission to be executed.
    
 # Important Considerations:
 Java Installation: Users will need to have Java (JRE or JDK version compatible with your project) 

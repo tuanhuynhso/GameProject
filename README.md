@@ -22,9 +22,9 @@ Download the latest release and extract it, which contains 3 things:
 
 Make it Executable (***MacOS*** and ***Linux*** Only):
 Open a terminal, navigate to the directory where you saved RunGame.sh, and run:
-
+```
 chmod +x RunGame.sh
-
+```
 This gives the script permission to be executed.
    
 # Important Considerations:
